@@ -1,0 +1,28 @@
+#  colors
+primary:
+ background: '#333333'
+ foreground: '#c5c8c6'
+
+# opacity
+background_opacity: .5
+
+# font
+font:
+ normal:
+  family: monospace
+  style: Regular
+
+ bold:
+  family: monospace
+  style: Bold
+
+ italic:
+  family: monospace
+  style: Italic
+
+ bold_italic:
+  family: monospace
+  
+  style: Bold Italic
+
+ size: 11

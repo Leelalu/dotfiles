@@ -1,0 +1,164 @@
+#+BABEL: :cache yes
+#+PROPERTY: header-args :tangle yes
+#+STARTUP: overview
+
+* Emacs conf
+** Org conf enabling
+#+BEGIN_SRC emacs-lisp
+(defun tangle-init ()
+  "If the current buffer is 'init.org' the code-blocks are
+tangled, and the tangled file is compiled."
+  (when (equal (buffer-file-name)
+               (expand-file-name (concat user-emacs-directory "init.org")))
+    (let ((prog-mode-hook nil))
+      (org-babel-tangle)
+      (byte-compile-file (concat user-emacs-directory "init.el")))))
+(add-hook 'after-save-hook 'tangle-init)
+#+END_SRC
+** Package Management
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ '(package-archives
+   (quote
+    (("gnu" . "https://elpa.gnu.org/packages/")
+     ("melpa" . "https://melpa.org/packages/")))))
+(package-initialize)
+(require 'package)
+#+END_SRC
+** Visuals
+*** Basics
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(setq inhibit-startup-screen t)
+#+END_SRC
+*** Shrink tabs
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
+(setq tab-width 2)
+(setq js-indent-level 2)
+(setq css-indent-offset 2)
+(setq-default c-basic-offset 2)
+(setq c-basic-offset 2)
+(setq-default tab-width 2)
+(setq-default c-basic-indent 2)
+(setq-default pythone-indent 2)
+(setq-default pythone-indent-offset 2)
+#+END_SRC
+*** Lines
+#+BEGIN_SRC emacs-lisp
+(global-visual-line-mode t)
+(setq-default line-spacing 0)
+(global-visual-line-mode 1)
+(setq-default frame-title-format "%b (%f)")
+#+END_SRC
+*** Mode line
+#+BEGIN_SRC emacs-lisp
+(set-face-foreground 'mode-line "white")
+(set-face-background 'mode-line "#8A0886")
+(setq-default mode-line-format (list
+ "<%b|%+>" 
+ "%m" 
+ "-|-" 
+ "%o" 
+ "-"  
+ "L:%l" 
+ ))
+#+END_SRC
+*** On gui
+#+BEGIN_SRC emacs-lisp
+(if (display-graphic-p)
+ (progn
+  (set-foreground-color "white")
+  (set-background-color "grey25")))
+#+END_SRC
+** Functioning
+*** Auto close compilation upon success
+#+BEGIN_SRC emacs-lisp
+(global-unset-key "\M-q")
+(global-set-key "\M-q" 'compile-command)
+  (defun compilation-exit-autoclose (status code msg)
+    (when (and (eq status 'exit) (zerop code))
+      (bury-buffer)
+      (delete-window (get-buffer-window (get-buffer "*compilation*"))))
+    (cons msg code))
+  (setq compilation-exit-message-function 'compilation-exit-autoclose)
+#+END_SRC
+*** Yes-no to y-n
+#+BEGIN_SRC emacs-lisp
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+*** Backups/autosave contained
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist '(("." . "~/.emacs.d/saves")))
+(defvar autosave-dir (concat "~/.emacs.d/saves" "/"))
+#+END_SRC
+** Keybinds
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c l")
+  (lambda ()
+    (interactive)
+      (dired "~/Documents/life")))
+(global-set-key (kbd "C-c m")
+  (lambda ()
+    (interactive)
+      (dired "~/Music")))
+(global-set-key (kbd "C-c d") 
+  (lambda ()
+  (interactive)
+    (message (replace-regexp-in-string "\n$" "" 
+    (shell-command-to-string "date +'%m-%d-%y|%H:%M'")))))
+(global-set-key (kbd "C-c d") 
+  (lambda ()
+  (interactive)
+    (shell-command-to-string "date +'%m-%d-%y|%H:%M'")))
+(global-set-key (kbd "C-c p") 
+  (lambda ()
+  (interactive)
+    (emms-pause)))
+#+END_SRC
+** Dired
+#+BEGIN_SRC emacs-lisp
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+#+END_SRC
+** Orgmode
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+'((sequence
+ "TODO"
+ "CURRENT"
+ "WAITING"
+ "|"
+ "DONE"
+ "CANCELLED"
+)))
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+END_SRC
+** Diary
+#+BEGIN_SRC emacs-lisp
+(setq view-diary-entries-initially t
+  mark-diary-entries-in-calender t
+  number-of-diary-entries 100)
+(add-hook 'diary-display-hook 'fancy-diary-display)
+(add-hook 'today-visible-calander-hook 'calander-mark-today)
+#+END_SRC
+** Emms
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/elisp/emms/lisp")
+(require 'emms-setup)
+(require 'emms-history)
+(require 'emms-player-mplayer)
+(emms-all)
+(setq emms-source-file-default-directory "~/Media/Music/") 
+(emms-default-players)
+(define-emms-simple-player mplayer '(file url)
+      (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv" ".wma"
+                    ".mov" ".avi" ".divx" ".ogm" ".asf" ".mkv" "http://" "mms://"
+                    ".rm" ".rmvb" ".mp4" ".flac" ".vob" ".m4a" ".flv" ".ogv" ".pls"))
+      "mplayer" "-slave" "-quiet" "-really-quiet" "-fullscreen")
+(setq emms-player-list '(emms-player-mpg321
+                         emms-player-ogg123
+                         emms-player-mplayer))
+(emms-history-load)
+#+END_SRC

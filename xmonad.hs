@@ -10,7 +10,7 @@ import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 
-myKeys conf =M.fromList([
+myKeys conf = M.fromList([
  -- launch term
  ((mod4Mask, xK_t) , spawn "alacritty")
  -- dmenu

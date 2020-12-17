@@ -2,15 +2,15 @@
 
 -- Imports
 import XMonad
-import XMonad.Layout.NoBorders (noBorders, smartBorders)
+import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
 import XMonad.Actions.CycleWS
+import XMonad.StackSet
 import Data.Monoid
+import Data.Map
 import System.Exit
-import qualified XMonad.StackSet as W
-import qualified Data.Map as M
 
-myKeys conf = M.fromList([
+myKeys conf = Data.Map.fromList([
  -- launch term
  ((mod4Mask, xK_t) , spawn "alacritty")
  -- dmenu
@@ -22,10 +22,10 @@ myKeys conf = M.fromList([
  -- rotate through layouts
  , ((mod4Mask, xK_space )  , sendMessage NextLayout)
  -- Move focus to  next window/workspace
- , ((mod4Mask, xK_o) , windows W.focusDown)
+ , ((mod4Mask, xK_o) , windows XMonad.StackSet.focusDown)
  , ((mod4Mask, xK_b) , nextWS)
  -- Swap  focused window with next window/to next workspace
- , ((mod4Mask .|. shiftMask, xK_o) , windows W.swapDown)
+ , ((mod4Mask .|. shiftMask, xK_o) , windows XMonad.StackSet.swapDown)
  , ((mod4Mask .|. shiftMask, xK_b), shiftToNext >> nextWS)
  -- Expand/Shrink master area
  , ((mod4Mask, xK_m) , sendMessage Expand)
@@ -37,14 +37,18 @@ myKeys conf = M.fromList([
  , ((mod4Mask    , xK_s) , spawn "xmonad --recompile; xmonad --restart")
  , ((mod4Mask .|. shiftMask, xK_q) , io (exitWith ExitSuccess))])
 
--- Main application
+-- Main application applying values to vars
 main = do xmonad(def{
- -- basic settings
- focusFollowsMouse = True, clickJustFocuses =True,
- normalBorderColor = "#663399", focusedBorderColor = "#BF55EC",
- workspaces = ["Main", "Rand"],
+ -- Mouse settings
+ focusFollowsMouse = True,
+ clickJustFocuses =True,
+ -- Window borders
+ normalBorderColor = "#663399",
+ focusedBorderColor = "#BF55EC",
  borderWidth = 3,
- -- set layouts
+ -- Layouts
  layoutHook = noBorders Full ||| spacing 10 (Tall 1 (3/100) (1/2)),
- -- apply keys
- keys = myKeys})
+ -- Workspaces
+ XMonad.workspaces = ["Main", "Rand"],
+ -- Apply keys
+ XMonad.keys = myKeys})

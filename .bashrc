@@ -1,8 +1,8 @@
 # Bashrc
 
-# Exit if running interactively
+# Exit if interactive
 [[ $- != *i* ]] && return
-# Make sure the terminal starts in the home directory
+# Cd home
 cd $HOME
 # Use autocd to cd in directory without cd
 shopt -s autocd cdspell
@@ -12,5 +12,7 @@ alias p='sudo pacman'
 alias qping='ping www.google.com -c 3'
 alias f='fg'
 alias e='emacs -nw'
-##prompt
+alias d='date +"%m-%d-%y|%H:%M"'
+alias gitpc='git commit -m $($1) && git push'
+# Prompt
 PS1="\e[0;35m[\W]\e[m\n\e[0;35m--->>> \e[m"

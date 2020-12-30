@@ -13,6 +13,7 @@ alias qping='ping www.google.com -c 3'
 alias f='fg'
 alias e='emacs -nw'
 alias d='date +"%m-%d-%y|%H:%M"'
-alias gitpc='git commit -m $($1) && git push'
+alias gitpc='read -p "Git Message:" MSG && git commit -m "$MSG" && git push'
+alias p='echo $($1)'
 # Prompt
 PS1="\e[0;35m[\W]\e[m\n\e[0;35m--->>> \e[m"

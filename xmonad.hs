@@ -20,9 +20,9 @@ main = do xmonad $ def{
  focusedBorderColor = "#BF55EC",
  borderWidth = 3,
  -- Layouts
- layoutHook = noBorders Full ||| spacing 10 (Tall 1 (3/100) (1/2)),
+ layoutHook = spacing 10 (Tall 1 (3/100) (1/2)) ||| noBorders Full,
  -- Workspaces
- XMonad.workspaces = ["Main", "Rand"],
+ XMonad.workspaces = ["Main", "Spare"],
  -- Apply keys
  modMask = mod4Mask,
  XMonad.keys = \conf@(XConfig {XMonad.modMask = modm}) -> Data.Map.fromList $ [
@@ -34,6 +34,8 @@ main = do xmonad $ def{
   , ((modm, xK_d), spawn "~/bin/dmenustatus")
   -- i3lock
   , ((modm , xK_z), spawn "i3lock --blur=1 --color=111111 --insidevercolor=D8BFD8 --insidewrongcolor=8B7B8B --insidecolor=BF55EC --ringvercolor=E066FF --ringwrongcolor=816687 --ringcolor=663399 --keyhlcolor=8B3A62")
+  -- cmus pause toggle
+  , ((modm, xK_p), spawn "cmus-remote -u")
   -- close window
   , ((modm, xK_0), kill)
   -- rotate through layouts

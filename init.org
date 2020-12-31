@@ -56,7 +56,7 @@ tangled, and the tangled file is compiled."
 *** Mode line
 #+BEGIN_SRC emacs-lisp
 (set-face-foreground 'mode-line "white")
-(set-face-background 'mode-line "#8A0886")
+(set-face-background 'mode-line "#BF55EC")
 (setq-default mode-line-format (list
  "<%b|%+>" 
  "%m" 
@@ -109,14 +109,15 @@ tangled, and the tangled file is compiled."
   (interactive)
     (message (replace-regexp-in-string "\n$" "" 
     (shell-command-to-string "date +'%m-%d-%y|%H:%M'")))))
-(global-set-key (kbd "C-c d") 
-  (lambda ()
-  (interactive)
-    (shell-command-to-string "date +'%m-%d-%y|%H:%M'")))
 (global-set-key (kbd "C-c p") 
   (lambda ()
   (interactive)
     (emms-pause)))
+(global-set-key (kbd "C-c c") 
+  (lambda ()
+  (interactive)
+    (save-buffer)
+    (recompile)))
 #+END_SRC
 ** Dired
 #+BEGIN_SRC emacs-lisp
@@ -142,23 +143,4 @@ tangled, and the tangled file is compiled."
   number-of-diary-entries 100)
 (add-hook 'diary-display-hook 'fancy-diary-display)
 (add-hook 'today-visible-calander-hook 'calander-mark-today)
-#+END_SRC
-** Emms
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/elisp/emms/lisp")
-(require 'emms-setup)
-(require 'emms-history)
-(require 'emms-player-mplayer)
-(emms-all)
-(setq emms-source-file-default-directory "~/Media/Music/") 
-(emms-default-players)
-(define-emms-simple-player mplayer '(file url)
-      (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv" ".wma"
-                    ".mov" ".avi" ".divx" ".ogm" ".asf" ".mkv" "http://" "mms://"
-                    ".rm" ".rmvb" ".mp4" ".flac" ".vob" ".m4a" ".flv" ".ogv" ".pls"))
-      "mplayer" "-slave" "-quiet" "-really-quiet" "-fullscreen")
-(setq emms-player-list '(emms-player-mpg321
-                         emms-player-ogg123
-                         emms-player-mplayer))
-(emms-history-load)
 #+END_SRC

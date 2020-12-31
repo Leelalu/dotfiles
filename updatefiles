@@ -1,0 +1,6 @@
+#!/bin/bash
+cp ~/.bashrc .
+cp ~/.xinitrc .
+cp ~/.alacritty.yml .
+cp ~/.emacs.d/init.org .
+cp ~/.xmonad/xmonad.hs .

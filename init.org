@@ -25,6 +25,44 @@ tangled, and the tangled file is compiled."
 (package-initialize)
 (require 'package)
 #+END_SRC
+** Keybinds
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c l")
+  (lambda ()
+    (interactive)
+      (dired "~/Documents/life")))
+(global-set-key (kbd "C-c m")
+  (lambda ()
+    (interactive)
+      (dired "~/Music")))
+(global-set-key (kbd "C-c d") 
+  (lambda ()
+  (interactive)
+    (message (replace-regexp-in-string "\n$" "" 
+    (shell-command-to-string "date +'%m-%d-%y|%H:%M'")))))
+(global-set-key (kbd "C-c p") 
+  (lambda ()
+  (interactive)
+    (emms-pause)))
+(global-set-key (kbd "C-c c") 
+  (lambda ()
+  (interactive)
+    (save-buffer)
+    (recompile)))
+(global-set-key (kbd "C-c x") 
+  (lambda ()
+  (interactive)
+   (shell-command (read-from-minibuffer "run: "))))
+#+END_SRC
+** Hooks
+#+BEGIN_SRC emacs-lisp
+(add-hook `emacs-startup-hook 
+ (lambda ()
+  (erase-buffer)
+  (shell)
+  (switch-to-buffer "*scratch*")
+  (delete-other-windows)))
+#+END_SRC
 ** Visuals
 *** Basics
 #+BEGIN_SRC emacs-lisp
@@ -93,31 +131,6 @@ tangled, and the tangled file is compiled."
 #+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist '(("." . "~/.emacs.d/saves")))
 (defvar autosave-dir (concat "~/.emacs.d/saves" "/"))
-#+END_SRC
-** Keybinds
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c l")
-  (lambda ()
-    (interactive)
-      (dired "~/Documents/life")))
-(global-set-key (kbd "C-c m")
-  (lambda ()
-    (interactive)
-      (dired "~/Music")))
-(global-set-key (kbd "C-c d") 
-  (lambda ()
-  (interactive)
-    (message (replace-regexp-in-string "\n$" "" 
-    (shell-command-to-string "date +'%m-%d-%y|%H:%M'")))))
-(global-set-key (kbd "C-c p") 
-  (lambda ()
-  (interactive)
-    (emms-pause)))
-(global-set-key (kbd "C-c c") 
-  (lambda ()
-  (interactive)
-    (save-buffer)
-    (recompile)))
 #+END_SRC
 ** Dired
 #+BEGIN_SRC emacs-lisp

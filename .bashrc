@@ -6,6 +6,7 @@
 PS1="\e[0;35m[\W]\e[m\n\e[0;35m--->>> \e[m"
 # Cd home
 cd $HOME
+export PATH="/home/amar/myapp:$PATH"
 # History options
 HISTSIZE=50000
 HISTFILSIZE=55000
@@ -15,6 +16,11 @@ shopt -s dotglob
 shopt -s nocaseglob
 shopt -s histappend
 shopt -s checkwinsize
+# Functions
+mkexe (){
+    touch $1
+    chmod +x $1
+}
 # Aliases
 alias l='ls --color=auto --group-directories-first'
 alias p='sudo pacman'

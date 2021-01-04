@@ -23,6 +23,11 @@ main = do xmonad $ def{
  layoutHook = spacing 10 (Tall 1 (3/100) (1/2)) ||| noBorders Full,
  -- Workspaces
  XMonad.workspaces = ["Main", "Spare"],
+ -- Manage Hooks
+ manageHook = composeAll [
+   className =? "android-studio" --> doFloat
+ , className =? "MPlayer" --> doFloat
+ , className =? "Gimp" --> doFloat],
  -- Apply keys
  modMask = mod4Mask,
  XMonad.keys = \conf@(XConfig {XMonad.modMask = modm}) -> Data.Map.fromList $ [

@@ -29,12 +29,12 @@ tangled, and the tangled file is compiled."
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c l")
   (lambda ()
-    (interactive)
-      (dired "~/Documents/life")))
+  (interactive)
+    (dired "~/Documents/life")))
 (global-set-key (kbd "C-c m")
   (lambda ()
-    (interactive)
-      (dired "~/Music")))
+  (interactive)
+    (dired "~/Music")))
 (global-set-key (kbd "C-c d") 
   (lambda ()
   (interactive)
@@ -56,12 +56,12 @@ tangled, and the tangled file is compiled."
 #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp
-(add-hook `emacs-startup-hook 
- (lambda ()
-  (erase-buffer)
-  (shell)
-  (switch-to-buffer "*scratch*")
-  (delete-other-windows)))
+(add-hook `emacs-startup-hook
+  (lambda ()
+    (erase-buffer)
+    (shell)
+    (switch-to-buffer "*scratch*")
+    (delete-other-windows)))
 #+END_SRC
 ** Visuals
 *** Basics
@@ -96,12 +96,9 @@ tangled, and the tangled file is compiled."
 (set-face-foreground 'mode-line "white")
 (set-face-background 'mode-line "#BF55EC")
 (setq-default mode-line-format (list
- "<%b|%+>" 
- "%m" 
- "-|-" 
- "%o" 
- "-"  
- "L:%l" 
+  "<%b|%+>" 
+  "<%m>" 
+  "<%o|L:%l>"
  ))
 #+END_SRC
 *** On gui
@@ -147,7 +144,6 @@ tangled, and the tangled file is compiled."
  "DONE"
  "CANCELLED"
 )))
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+END_SRC
 ** Diary
 #+BEGIN_SRC emacs-lisp

@@ -12,5 +12,7 @@ picom &
 feh --bg-scale ~/.bg.png
 # Switch caps w/ ctrl
 setxkbmap -option ctrl:swapcaps
+# Xset options
+xset s 1000
 # Execute xmonad wm
 exec /usr/bin/xmonad

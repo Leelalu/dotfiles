@@ -37,8 +37,6 @@ main = do xmonad $ def{
   , ((modm, xK_x), spawn "dmenu_run -nb '#1e1e1e' -sf '#ffffff' -sb '#663399' -nf '#ffffff' -p 'run:'")
   -- dmenu status
   , ((modm, xK_d), spawn "~/bin/dmenustatus")
-  -- i3lock
-  , ((modm , xK_z), spawn "i3lock --blur=1 --color=111111 --insidevercolor=D8BFD8 --insidewrongcolor=8B7B8B --insidecolor=BF55EC --ringvercolor=E066FF --ringwrongcolor=816687 --ringcolor=663399 --keyhlcolor=8B3A62")
   -- cmus pause toggle
   , ((modm, xK_p), spawn "cmus-remote -u")
   -- close window
@@ -59,6 +57,9 @@ main = do xmonad $ def{
   -- Increase/Deincrement windows master area
   , ((modm, xK_n ) , sendMessage (IncMasterN 1))
   , ((modm .|. shiftMask, xK_n) , sendMessage (IncMasterN (-1)))
+  -- i3lock
+  , ((modm , xK_z), spawn "i3lock --blur=1 --color=111111 --insidevercolor=D8BFD8 --insidewrongcolor=8B7B8B --insidecolor=BF55EC --ringvercolor=E066FF --ringwrongcolor=816687 --ringcolor=663399 --keyhlcolor=8B3A62")
+  , ((modm  .|. shiftMask, xK_z), spawn "xset s 1; i3lock --blur=1 --color=111111 --insidevercolor=D8BFD8 --insidewrongcolor=8B7B8B --insidecolor=BF55EC --ringvercolor=E066FF --ringwrongcolor=816687 --ringcolor=663399 --keyhlcolor=8B3A62; xset s 1000")  
   -- Quit/Restart xmonad
   , ((modm, xK_s) , spawn "xmonad --recompile; xmonad --restart")
   , ((modm .|. shiftMask, xK_q) , io (exitWith ExitSuccess))]}

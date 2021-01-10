@@ -1,0 +1,16 @@
+* Intro
+Config files for workflow
+These are all my files that I use for workflow and beauty, and hopefully you can learn from them.
+* Config Descriptions
+** Alacritty
+Sets up the Alacritty term emulator with opacity
+** Bashrc
+Settings altering bashrc including setting custom prompt, history size, adds functions, and aliases
+** Init.org
+Org file to tangle into init.el. Sets up emacs for my daily use.
+** mytheme.theme
+My cmus theme with colorscheme cooresponding to my desktop setup
+** Xinitrc
+Sets up the x server to fit monitor res, hide mouse, set wallpaper, swap caps w/ ctrl, then launch desktop enviroment.
+** Xmonad.hs
+Applies variables directly to xconf record without var buffer. Sets mainly colorscheme, layouts, and keybindings

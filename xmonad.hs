@@ -5,6 +5,7 @@ import XMonad
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
 import XMonad.Actions.CycleWS
+import XMonad.Hooks.EwmhDesktops
 import XMonad.StackSet
 import Data.Monoid
 import Data.Map
@@ -27,7 +28,8 @@ main = do xmonad $ def{
  manageHook = composeAll [
    className =? "android-studio" --> doFloat
  , className =? "MPlayer" --> doFloat
- , className =? "Gimp" --> doFloat],
+ , className =? "Gimp" --> doFloat]
+ , handleEventHook = fullscreenEventHook,
  -- Apply keys
  modMask = mod4Mask,
  XMonad.keys = \conf@(XConfig {XMonad.modMask = modm}) -> Data.Map.fromList $ [
@@ -44,7 +46,7 @@ main = do xmonad $ def{
   -- rotate through layouts
   , ((modm, xK_space ), sendMessage NextLayout)
   -- send floating window to tiling
-  , ((modm, xK_l), withFocused $ windows . XMonad.StackSet.sink)
+  , ((modm .|. shiftMask, xK_space), withFocused $ windows . XMonad.StackSet.sink)
   -- Move focus to  next window/workspace
   , ((modm, xK_o), windows XMonad.StackSet.focusDown)
   , ((modm, xK_b), nextWS)

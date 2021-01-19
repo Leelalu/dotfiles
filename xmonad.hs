@@ -21,7 +21,7 @@ main = do xmonad $ def{
  focusedBorderColor = "#BF55EC",
  borderWidth = 3,
  -- Layouts
- layoutHook = spacing 10 $ smartBorders Grid ||| noBorders Full,
+ layoutHook = spacing 10 (smartBorders Grid) ||| noBorders Full,
  -- Workspaces
  XMonad.workspaces = ["Main", "Spare"],
  -- Manage Hooks

@@ -1,10 +1,3 @@
-#+BABEL: :cache yes
-#+PROPERTY: header-args :tangle yes
-#+STARTUP: overview
-
-* Emacs conf
-** Org conf enabling
-#+BEGIN_SRC emacs-lisp
 (defun tangle-init ()
   (when (equal (buffer-file-name)
                (expand-file-name (concat user-emacs-directory "init.org")))
@@ -12,13 +5,7 @@
       (org-babel-tangle)
       (byte-compile-file (concat user-emacs-directory "init.el")))))
 (add-hook 'after-save-hook 'tangle-init)
-#+END_SRC
 
-#+RESULTS:
-| tangle-init | rmail-after-save-hook |
-
-** Package Management
-#+BEGIN_SRC emacs-lisp
 (custom-set-variables
  '(package-archives
    (quote
@@ -26,13 +13,7 @@
      ("melpa" . "https://melpa.org/packages/")))))
 (package-initialize)
 (require 'package)
-#+END_SRC
 
-#+RESULTS:
-: package
-
-** Keybinds
-#+BEGIN_SRC emacs-lisp
 ; Go to personal dir
 (global-set-key (kbd "C-c l")
  (lambda ()
@@ -80,30 +61,19 @@
  (lambda ()
  (interactive)
   (shell-command (read-from-minibuffer "run: "))))
-#+END_SRC
 
-#+RESULTS:
-| lambda | nil | (interactive) | (shell-command (read-from-minibuffer run: )) |
-
-** Hooks
-#+BEGIN_SRC emacs-lisp
 (add-hook `emacs-startup-hook
   (lambda ()
     (erase-buffer)
     (shell)
     (switch-to-buffer "*scratch*")
     (delete-other-windows)))
-#+END_SRC
-** Visuals
-*** Basics
-#+BEGIN_SRC emacs-lisp
+
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (setq inhibit-startup-screen t)
-#+END_SRC
-*** Shrink tabs
-#+BEGIN_SRC emacs-lisp
+
 (setq-default indent-tabs-mode nil)
 (setq tab-width 2)
 (setq js-indent-level 2)
@@ -114,16 +84,12 @@
 (setq-default c-basic-indent 2)
 (setq-default pythone-indent 2)
 (setq-default pythone-indent-offset 2)
-#+END_SRC
-*** Lines
-#+BEGIN_SRC emacs-lisp
+
 (global-visual-line-mode t)
 (setq-default line-spacing 0)
 (global-visual-line-mode 1)
 (setq-default frame-title-format "%b (%f)")
-#+END_SRC
-*** Mode line
-#+BEGIN_SRC emacs-lisp
+
 (set-face-foreground 'mode-line "white")
 (set-face-background 'mode-line "#BF55EC")
 (setq-default mode-line-format (list
@@ -131,38 +97,25 @@
   "<%m>" 
   "<%o|L:%l>"
  ))
-#+END_SRC
-*** On gui
-#+BEGIN_SRC emacs-lisp
+
 (if (display-graphic-p)
  (progn
   (set-foreground-color "white")
   (set-background-color "grey25")
   (setq visible-bell t)))
-#+END_SRC
-** Functioning
-*** Auto close compilation upon success
-#+BEGIN_SRC emacs-lisp
+
 (add-hook 'compilation-finish-functions
  (lambda (buf str)
   (if (null (string-match ".*exited abnormally.*" str))
    (kill-buffer-and-window))))
-#+END_SRC
-*** Yes-no to y-n
-#+BEGIN_SRC emacs-lisp
+
 (defalias 'yes-or-no-p 'y-or-n-p)
-#+END_SRC
-*** Backups/autosave contained
-#+BEGIN_SRC emacs-lisp
+
 (setq backup-directory-alist '(("." . "~/.emacs.d/saves")))
 (defvar autosave-dir (concat "~/.emacs.d/saves" "/"))
-#+END_SRC
-** Dired
-#+BEGIN_SRC emacs-lisp
+
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
-#+END_SRC
-** Orgmode
-#+BEGIN_SRC emacs-lisp
+
 (setq org-todo-keywords
  '((sequence
   "TODO"
@@ -173,12 +126,9 @@
   "|"
   "DONE"
   "CANCELLED")))
-#+END_SRC
-** Diary
-#+BEGIN_SRC emacs-lisp
+
 (setq view-diary-entries-initially t
   mark-diary-entries-in-calender t
   number-of-diary-entries 100)
 (add-hook 'diary-display-hook 'fancy-diary-display)
 (add-hook 'today-visible-calander-hook 'calander-mark-today)
-#+END_SRC

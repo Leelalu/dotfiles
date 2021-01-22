@@ -9,19 +9,19 @@ background_opacity: .5
 # font
 font:
  normal:
-  family: monospace
+  family: inconsolata
   style: Regular
 
  bold:
-  family: monospace
+  family: inconsolata
   style: Bold
 
  italic:
-  family: monospace
+  family: inconsolata
   style: Italic
 
  bold_italic:
-  family: monospace
+  family: inconsolata
   
   style: Bold Italic
 

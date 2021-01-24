@@ -33,14 +33,17 @@ ffsplice(){
 }
 ffconcat(){
     ffmpeg -i $1 -i $2 -filter_complex "[0:v][0:a][1:v][1:a] concat=n=2:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" $(echo $1 | cut -f 1 -d '.')_$(echo $2 | cut -f 1 -d '.')-concat.mkv
-    
+
 }
 # aliases
 alias l='ls --color=auto --group-directories-first'
-alias p='sudo pacman'
+alias p='doas pacman'
 alias f='fg'
 alias e='emacs -nw'
+alias setxkbswapcaps='setxkbmap -option ctrl:swapcaps'
 alias d='date +"%m-%d-%y|%H:%M"'
 alias qping='ping www.google.com -c 3'
+alias gpgencrypt='gpg --encrypt --sign --armor -r $USER $1'
+alias gpgdecrypt='gpg --decrypt $1'
 alias gitreorg='git remote rm origin &&  git remote add origin link'
 alias gitcpp='read -p "Git Message: " MSG && git commit -m "$MSG" && git pull && git push'

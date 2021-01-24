@@ -1,0 +1,10 @@
+@-moz-document url-prefix(about:blank) {
+  html > body:empty {
+    background-color: #222222 !important;
+  }
+}
+@-moz-document url(about:blank) {
+  html > body:empty {
+    background-color: #222222 !important;
+  }
+}

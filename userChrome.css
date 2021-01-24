@@ -1,0 +1,8 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"); 
+#statuspanel {display:none!important;}
+#blink {text-decoration: none ! important;}
+#forward-button {display:none;}
+#back-button {display:none;}
+#pageActionButton {display: none !important;}
+#tabbrowser tabpanels { background-color: #222222) !important; }
+#browser { background-color: #222222 !important; }

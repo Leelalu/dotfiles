@@ -2,8 +2,11 @@
 
 # Exit if interactive
 [[ $- != *i* ]] && return
-# Prompt
-PS1="\e[0;35m[\W]\e[m\n\e[0;35m--->>> \e[m"
+# Powerline
+powerline-daemon -q
+POWERLINE_BASH_CONTINUATION=1
+POWERLINE_BASH_SELECT=1
+. /usr/share/powerline/bindings/bash/powerline.sh
 # Cd home
 cd $HOME
 # History options
@@ -37,12 +40,12 @@ ffconcat(){
 }
 # aliases
 alias l='ls --color=auto --group-directories-first'
-alias p='doas pacman'
+alias p='sudo pacman'
 alias f='fg'
 alias e='emacs -nw'
-alias setxkbswapcaps='setxkbmap -option ctrl:swapcaps'
 alias d='date +"%m-%d-%y|%H:%M"'
 alias qping='ping www.google.com -c 3'
+alias setxkbswapcaps='setxkbmap -option ctrl:swapcaps'
 alias gpgencrypt='gpg --encrypt --sign --armor -r $USER $1'
 alias gpgdecrypt='gpg --decrypt $1'
 alias gitreorg='git remote rm origin &&  git remote add origin link'

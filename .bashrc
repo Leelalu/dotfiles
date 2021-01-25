@@ -2,13 +2,13 @@
 
 # Exit if interactive
 [[ $- != *i* ]] && return
-# Powerline
-powerline-daemon -q
-POWERLINE_BASH_CONTINUATION=1
-POWERLINE_BASH_SELECT=1
-. /usr/share/powerline/bindings/bash/powerline.sh
 # Cd home
 cd $HOME
+# Bash Prompt
+SETLPUR='\e[48;2;191;95;236m\]'
+SETDPUR='\e[48;2;102;51;153m\]'
+SETUNDO='\e[0m\]'
+PS1=$(printf "${SETLPUR} $USER ${SETDPUR} \A ${SETLPUR} \w ${SETUNDO} \n${SETLPUR}run: ${SETUNDO}")
 # History options
 HISTSIZE=50000
 HISTFILSIZE=55000
@@ -36,11 +36,10 @@ ffsplice(){
 }
 ffconcat(){
     ffmpeg -i $1 -i $2 -filter_complex "[0:v][0:a][1:v][1:a] concat=n=2:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" $(echo $1 | cut -f 1 -d '.')_$(echo $2 | cut -f 1 -d '.')-concat.mkv
-
 }
 # aliases
 alias l='ls --color=auto --group-directories-first'
-alias p='sudo pacman'
+alias p='doas pacman'
 alias f='fg'
 alias e='emacs -nw'
 alias d='date +"%m-%d-%y|%H:%M"'

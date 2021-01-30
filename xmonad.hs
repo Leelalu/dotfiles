@@ -27,6 +27,8 @@ main = do xmonad $ def{
  -- Manage Hooks
  manageHook = composeAll [
   className =? "android-studio" --> doFloat],
+ -- Set modm to alt for initiating floating window managment exclusively
+ modMask = mod1Mask,
  -- Apply keys
  XMonad.keys = \conf -> Data.Map.fromList $ [
   -- Launch term
@@ -52,18 +54,14 @@ main = do xmonad $ def{
   -- Vecrat/Xdotool for keyboard mouse interface
   , ((mod4Mask, xK_y), spawn "vecrat 111 111")
   , ((mod4Mask, xK_i), spawn "vecrat 999 999")
-  , ((mod4Mask, xK_h), spawn "vecrat -7 0")
-  , ((mod4Mask, xK_j), spawn "vecrat 0 7")
-  , ((mod4Mask, xK_k), spawn "vecrat 0 -7")
-  , ((mod4Mask, xK_l), spawn "vecrat 7 0")
-  , ((mod4Mask .|. shiftMask, xK_h), spawn "vecrat -20 0")
-  , ((mod4Mask .|. shiftMask, xK_j), spawn "vecrat 0 20")
-  , ((mod4Mask .|. shiftMask, xK_k), spawn "vecrat 0 -20")
-  , ((mod4Mask .|. shiftMask, xK_l), spawn "vecrat 20 0")
-  , ((mod4Mask .|. controlMask .|. shiftMask, xK_h), spawn "vecrat -3 0")
-  , ((mod4Mask .|. controlMask .|. shiftMask, xK_j), spawn "vecrat 0 3")
-  , ((mod4Mask .|. controlMask .|. shiftMask, xK_k), spawn "vecrat 0 -3")
-  , ((mod4Mask .|. controlMask .|. shiftMask, xK_l), spawn "vecrat 3 0")
+  , ((mod4Mask, xK_h), spawn "vecrat -10 0")
+  , ((mod4Mask, xK_j), spawn "vecrat 0 10")
+  , ((mod4Mask, xK_k), spawn "vecrat 0 -10")
+  , ((mod4Mask, xK_l), spawn "vecrat 10 0")
+  , ((mod4Mask .|. shiftMask, xK_h), spawn "vecrat -3 0")
+  , ((mod4Mask .|. shiftMask, xK_j), spawn "vecrat 0 3")
+  , ((mod4Mask .|. shiftMask, xK_k), spawn "vecrat 0 -3")
+  , ((mod4Mask .|. shiftMask, xK_l), spawn "vecrat 3 0")
   , ((mod4Mask, xK_m), spawn "xdotool click 1")
   , ((mod4Mask .|. shiftMask, xK_m), spawn "xdotool click 3")
   , ((mod4Mask .|. controlMask .|. shiftMask, xK_m), spawn "xdotool click 2")

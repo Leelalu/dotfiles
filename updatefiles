@@ -3,4 +3,6 @@ cp ~/.bashrc .
 cp ~/.xinitrc .
 cp ~/.alacritty.yml .
 cp ~/.emacs.d/init.org .
+cp ~/.emacs.d/init.el .
 cp ~/.xmonad/xmonad.hs .
+cp ~/.mozilla/firefox/*.default-release/chrome/userC* .

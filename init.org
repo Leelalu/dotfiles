@@ -20,13 +20,10 @@
 ** Package Management
 #+BEGIN_SRC emacs-lisp
 (require 'package)
-(custom-set-variables
- '(package-archives
-  (quote
-   (("gnu" . "https://elpa.gnu.org/packages/")
-    ("melpa" . "https://melpa.org/packages/")))))
-(add-to-list 'package-archives '("melpa" "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")t)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")t)
 (package-initialize)
+(package-refresh-contents)
 #+END_SRC
 
 #+RESULTS:
@@ -52,6 +49,26 @@
  (lambda ()
  (interactive)
   (dired "~/Media/Music")))
+; Quick previous buffer
+(global-set-key (kbd "C-c b")
+ (lambda ()
+ (interactive)
+ (previous-buffer)))
+; Quick next buffer
+(global-set-key (kbd "C-c f")
+ (lambda ()
+ (interactive)
+ (next-buffer)))
+; Quick toggle buffer
+(global-set-key (kbd "C-c t")
+ (lambda ()
+ (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1))))
+; Man pages
+(global-set-key (kbd "C-c M")
+ (lambda ()
+ (interactive)
+  (woman)))
 ; Get date and time
 (global-set-key (kbd "C-c d")
  (lambda ()
@@ -92,6 +109,7 @@
 #+END_SRC
 
 #+RESULTS:
+| lambda | nil | (interactive) | (shell-command (read-from-minibuffer run: )) |
 
 ** Hooks
 #+BEGIN_SRC emacs-lisp
@@ -101,7 +119,8 @@
     (erase-buffer)
     (shell)
     (switch-to-buffer "*scratch*")
-    (delete-other-windows)))
+    (delete-other-windows)
+    (global-company-mode)))
 ; Save Hook deleting trailing whitespace
 (add-hook 'after-save-hook
  (lambda ()
@@ -156,7 +175,7 @@
 #+RESULTS:
 : %b (%f)
 
-*** Mode Line
+*** Mode Line Setup for term
 #+BEGIN_SRC emacs-lisp
 (set-face-foreground 'mode-line "white")
 (set-face-background 'mode-line "#BF55EC")
@@ -170,7 +189,7 @@
 #+RESULTS:
 | <%b | %+> | <%m> | <%o | L:%l> |
 
-*** If Gui
+*** If Gui set new modeline and gui faces
 #+BEGIN_SRC emacs-lisp
 (when (display-graphic-p)
  ; Modeline
@@ -202,6 +221,10 @@
 #+RESULTS:
 
 ** Functioning
+*** Emacs Client
+#+BEGIN_SRC emacs-lisp
+(server-start)
+#+END_SRC
 *** Yes-no to y-n
 #+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -209,16 +232,6 @@
 
 #+RESULTS:
 : yes-or-no-p
-
-*** Hide passwords
-#+BEGIN_SRC emacs-lisp
-(setq comint-password-prompt-regexp
- (concat comint-password-prompt-regexp
-  "|password:\\'"))
-#+END_SRC
-
-#+RESULTS:
-: \(^ *\|\( SMB\|'s\|Bad\|CVS\|Enter\(?: \(?:Auth\|\(?:sam\|th\)e\)\)?\|Kerberos\|LDAP\|New\|Old\|PEM\|Re\(?:peat\|type\)\|SUDO\|UNIX\|\[sudo]\|enter\(?: \(?:auth\|\(?:sam\|th\)e\)\)?\|login\|new\|old\) +.*\)\(?:\(?:adgangskode\|contrase\(?:\(?:ny\|ñ\)a\)\|geslo\|h\(?:\(?:asł\|esl\)o\)\|iphasiwedi\|jelszó\|l\(?:ozinka\|ösenord\)\|m\(?:ot de passe\|ật khẩu\)\|p\(?:a\(?:rola\|s\(?:ahitza\|s\(?: phrase\|code\|ord\|phrase\|wor[dt]\)\|vorto\)\)\|in\)\|s\(?:alasana\|enha\|laptažodis\)\|wachtwoord\|лозинка\|пароль\|ססמה\|كلمة السر\|गुप्तशब्द\|शब्दकूट\|গুপ্তশব্দ\|পাসওয়ার্ড\|ਪਾਸਵਰਡ\|પાસવર્ડ\|ପ୍ରବେଶ ସଙ୍କେତ\|கடவுச்சொல்\|సంకేతపదము\|ಗುಪ್ತಪದ\|അടയാളവാക്ക്\|රහස්පදය\|ពាក្យសម្ងាត់\|パスワード\|密[码碼]\|암호\)\|Response\)\(?:\(?:, try\)? *again\| (empty for no passphrase)\| (again)\)?\(?: [[:alpha:]]+ .+\)?[[:blank:]]*[:：៖][[:blank:]]*\'doas (*) password:\|^doas (*) password:\s *\'\|^password:\s *\'\|^password:\s'\|^password:'\|^password:'\|password:'\|doas (*) password:'\|doas (*) password:'\|doas (*) password:'
 
 *** Backups/autosave contained
 #+BEGIN_SRC emacs-lisp
@@ -230,6 +243,16 @@
 #+RESULTS:
 : autosave-dir
 
+*** Hide passwords
+asdf#+BEGIN_SRC emacs-lisp
+(setq comint-password-prompt-regexp
+ (concat comint-password-prompt-regexp
+  "\\|^password:\\s *\\'"))
+asdf#+END_SRC
+
+#+RESULTS:
+: \(^ *\|\( SMB\|'s\|Bad\|CVS\|Enter\(?: \(?:Auth\|\(?:sam\|th\)e\)\)?\|Kerberos\|LDAP\|New\|Old\|PEM\|Re\(?:peat\|type\)\|SUDO\|UNIX\|\[sudo]\|enter\(?: \(?:auth\|\(?:sam\|th\)e\)\)?\|login\|new\|old\) +.*\)\(?:\(?:adgangskode\|contrase\(?:\(?:ny\|ñ\)a\)\|geslo\|h\(?:\(?:asł\|esl\)o\)\|iphasiwedi\|jelszó\|l\(?:ozinka\|ösenord\)\|m\(?:ot de passe\|ật khẩu\)\|p\(?:a\(?:rola\|s\(?:ahitza\|s\(?: phrase\|code\|ord\|phrase\|wor[dt]\)\|vorto\)\)\|in\)\|s\(?:alasana\|enha\|laptažodis\)\|wachtwoord\|лозинка\|пароль\|ססמה\|كلمة السر\|गुप्तशब्द\|शब्दकूट\|গুপ্তশব্দ\|পাসওয়ার্ড\|ਪਾਸਵਰਡ\|પાસવર્ડ\|ପ୍ରବେଶ ସଙ୍କେତ\|கடவுச்சொல்\|సంకేతపదము\|ಗುಪ್ತಪದ\|അടയാളവാക്ക്\|රහස්පදය\|ពាក្យសម្ងាត់\|パスワード\|密[码碼]\|암호\)\|Response\)\(?:\(?:, try\)? *again\| (empty for no passphrase)\| (again)\)?\(?: [[:alpha:]]+ .+\)?[[:blank:]]*[:：៖][[:blank:]]*\'\|^password:\s *\'
+
 ** Dired
 #+BEGIN_SRC emacs-lisp
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
@@ -240,22 +263,21 @@
 
 ** Orgmode
 #+BEGIN_SRC emacs-lisp
-(setq org-todo-keywords
- '("TODO"
-  "CURRENT"
-  "TOSTART"
-  "PAUSED"
-  "BACKLOG"
-  "WAITING"
-  "|"
-  "DONE"
-  "CANCELLED"))
-(setq org-agenda-files "~/Documents/life/todo.org")
-(add-hook 'org-mode-hook (lambda () org-bullets-mode))
+(setq org-todo-keywords '(
+ "TODO"
+ "CURRENT"
+ "TOSTART"
+ "PAUSED"
+ "BACKLOG"
+ "WAITING"
+ "|"
+ "DONE"
+ "CANCELLED"))
+(setq org-agenda-files '("~/Documents/life/todo.org"))
 #+END_SRC
 
 #+RESULTS:
-| TODO | CURRENT | TOSTART | PAUSED | BACKLOG | WAITING |   |   | DONE | CANCELLED |
+| ~/Documents/life/todo.org |
 
 ** Diary
 #+BEGIN_SRC emacs-lisp

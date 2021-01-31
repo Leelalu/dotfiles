@@ -7,13 +7,10 @@
 (add-hook 'after-save-hook 'tangle-init)
 
 (require 'package)
-(custom-set-variables
- '(package-archives
-  (quote
-   (("gnu" . "https://elpa.gnu.org/packages/")
-    ("melpa" . "https://melpa.org/packages/")))))
-(add-to-list 'package-archives '("melpa" "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")t)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")t)
 (package-initialize)
+(package-refresh-contents)
 
 ; Set simple clip
 (global-set-key (kbd "C-c C")
@@ -34,6 +31,26 @@
  (lambda ()
  (interactive)
   (dired "~/Media/Music")))
+; Quick previous buffer
+(global-set-key (kbd "C-c b")
+ (lambda ()
+ (interactive)
+ (previous-buffer)))
+; Quick next buffer
+(global-set-key (kbd "C-c f")
+ (lambda ()
+ (interactive)
+ (next-buffer)))
+; Quick toggle buffer
+(global-set-key (kbd "C-c t")
+ (lambda ()
+ (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1))))
+; Man pages
+(global-set-key (kbd "C-c M")
+ (lambda ()
+ (interactive)
+  (woman)))
 ; Get date and time
 (global-set-key (kbd "C-c d")
  (lambda ()
@@ -78,7 +95,8 @@
     (erase-buffer)
     (shell)
     (switch-to-buffer "*scratch*")
-    (delete-other-windows)))
+    (delete-other-windows)
+    (global-company-mode)))
 ; Save Hook deleting trailing whitespace
 (add-hook 'after-save-hook
  (lambda ()
@@ -144,29 +162,26 @@
  ; Remove key
  (global-unset-key (kbd "C-z")))
 
-(defalias 'yes-or-no-p 'y-or-n-p)
+(server-start)
 
-(setq comint-password-prompt-regexp
- (concat comint-password-prompt-regexp
-  "|password:\\'"))
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/saves")))
 (defvar autosave-dir (concat "~/.emacs.d/saves" "/"))
 
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
-(setq org-todo-keywords
- '("TODO"
-  "CURRENT"
-  "TOSTART"
-  "PAUSED"
-  "BACKLOG"
-  "WAITING"
-  "|"
-  "DONE"
-  "CANCELLED"))
-(setq org-agenda-files "~/Documents/life/todo.org")
-(add-hook 'org-mode-hook (lambda () org-bullets-mode))
+(setq org-todo-keywords '(
+ "TODO"
+ "CURRENT"
+ "TOSTART"
+ "PAUSED"
+ "BACKLOG"
+ "WAITING"
+ "|"
+ "DONE"
+ "CANCELLED"))
+(setq org-agenda-files '("~/Documents/life/todo.org"))
 
 (setq view-diary-entries-initially t
   mark-diary-entries-in-calender t

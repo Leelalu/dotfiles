@@ -5,10 +5,10 @@
 # Cd home
 cd $HOME
 # Bash Prompt
-SETLPUR='\e[48;2;191;95;236m\]'
-SETDPUR='\e[48;2;102;51;153m\]'
-SETUNDO='\e[0m\]'
-PS1=$(printf "${SETLPUR} $USER ${SETDPUR} \A ${SETLPUR} \w ${SETUNDO} \n${SETLPUR}run: ${SETUNDO}")
+SETLPUR='\e[48;2;191;95;236m'
+SETDPUR='\e[48;2;102;51;153m'
+SETUNDO='\e[0m'
+PS1=$(printf "\[${SETLPUR} $USER ${SETDPUR} \A ${SETLPUR} \w ${SETUNDO} \n${SETLPUR}run: ${SETUNDO}")
 # History options
 HISTSIZE=50000
 HISTFILSIZE=55000
@@ -41,10 +41,11 @@ ffconcat(){
 alias l='ls --color=auto --group-directories-first'
 alias p='doas pacman'
 alias f='fg'
-alias e='emacs -nw'
+alias e='emacsclient -nw --create-frame $1'
 alias d='date +"%m-%d-%y|%H:%M"'
 alias qping='ping www.google.com -c 3'
 alias setxkbswapcaps='setxkbmap -option ctrl:swapcaps'
+alias gdbrun='gdb -ex run $1'
 alias gpgencrypt='gpg --encrypt --sign --armor -r $USER $1'
 alias gpgdecrypt='gpg --decrypt $1'
 alias gitreorg='git remote rm origin &&  git remote add origin link'

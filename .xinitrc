@@ -14,5 +14,7 @@ feh --bg-scale ~/.bg.png
 setxkbmap -option ctrl:swapcaps
 # Xset options
 xset s 1000
+# Start emacsclient
+emacsclient --daemon
 # Execute xmonad wm
 exec /usr/bin/xmonad

@@ -175,6 +175,15 @@
 #+RESULTS:
 : %b (%f)
 
+*** Company Mode
+#+BEGIN_SRC emacs-lisp
+(custom-set-faces
+ `(company-tooltip ((t (:inherit default :background "#BF55EC"))))
+ `(company-scrollbar-bg ((t (:background "#220066"))))
+ `(company-scrollbar-fg ((t (:background "#BF55EC"))))
+ `(company-tooltip-selection ((t (:background "#663399"))))
+ `(company-tooltip-common ((t (:background "#775599")))))
+#+END_SRC
 *** Mode Line Setup for term
 #+BEGIN_SRC emacs-lisp
 (set-face-foreground 'mode-line "white")

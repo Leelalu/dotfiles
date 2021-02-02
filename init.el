@@ -128,6 +128,13 @@
 (global-visual-line-mode 1)
 (setq-default frame-title-format "%b (%f)")
 
+(custom-set-faces
+ `(company-tooltip ((t (:inherit default :background "#BF55EC"))))
+ `(company-scrollbar-bg ((t (:background "#220066"))))
+ `(company-scrollbar-fg ((t (:background "#BF55EC"))))
+ `(company-tooltip-selection ((t (:background "#663399"))))
+ `(company-tooltip-common ((t (:background "#775599")))))
+
 (set-face-foreground 'mode-line "white")
 (set-face-background 'mode-line "#BF55EC")
 (setq-default mode-line-format (list

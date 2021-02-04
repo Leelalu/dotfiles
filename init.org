@@ -48,7 +48,7 @@
 (global-set-key (kbd "C-c m")
  (lambda ()
  (interactive)
-  (dired "~/Media/Music")))
+  (magit-status)))
 ; Quick previous buffer
 (global-set-key (kbd "C-c b")
  (lambda ()

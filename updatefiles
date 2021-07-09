@@ -1,5 +1,6 @@
 #!/bin/bash
 cp ~/.bashrc .
+cp ~/.gdbinit .
 cp ~/.xinitrc .
 cp ~/.alacritty.yml .
 cp ~/.emacs.d/init.org .

@@ -1,28 +1,23 @@
-#  colors
+# colors
 primary:
- background: '#333333'
- foreground: '#c5c8c6'
+ background: '#000000'
+ foreground: '#EEEEEE'
 
 # opacity
-background_opacity: .5
+background_opacity: .85
 
 # font
 font:
  normal:
   family: inconsolata
   style: Regular
-
  bold:
   family: inconsolata
   style: Bold
-
  italic:
   family: inconsolata
   style: Italic
-
  bold_italic:
   family: inconsolata
-  
   style: Bold Italic
-
- size: 11
+ size: 9

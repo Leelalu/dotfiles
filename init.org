@@ -3,138 +3,113 @@
 #+STARTUP: overview
 
 * Emacs conf
-** Org conf enabling
+** Org conf tangling
 #+BEGIN_SRC emacs-lisp
-(defun tangle-init ()
-  (when (equal (buffer-file-name)
-               (expand-file-name (concat user-emacs-directory "init.org")))
-    (let ((prog-mode-hook nil))
-      (org-babel-tangle)
-      (byte-compile-file (concat user-emacs-directory "init.el")))))
-(add-hook 'after-save-hook 'tangle-init)
+  (defun tangle-init ()
+    (when (equal (buffer-file-name)
+                 (expand-file-name (concat user-emacs-directory "init.org")))
+      (let ((prog-mode-hook nil))
+        (org-babel-tangle)
+        (byte-compile-file (concat user-emacs-directory "init.el")))))
+  (add-hook 'after-save-hook 'tangle-init)
 #+END_SRC
-
-#+RESULTS:
-| tangle-init | rmail-after-save-hook |
-
 ** Package Management
 #+BEGIN_SRC emacs-lisp
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")t)
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")t)
-(package-initialize)
-(package-refresh-contents)
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+  (add-to-list 'load-path "~/.emacs.d/load")
+  (setq package-check-signature nil)
+  (setq use-package-verbose nil)
+  (setq package-enable-at-startup t)
+  (package-initialize t)
 #+END_SRC
-
-#+RESULTS:
-
 ** Keybinds
 #+BEGIN_SRC emacs-lisp
-; Set simple clip
-(global-set-key (kbd "C-c C")
- (lambda ()
- (interactive)
-  (simpleclip-copy)))
-(global-set-key (kbd "C-c V")
- (lambda ()
- (interactive)
-  (simpleclip-paste)))
-; Go to personal dir
-(global-set-key (kbd "C-c l")
- (lambda ()
- (interactive)
-  (dired "~/Documents/life")))
-; Quick set to Music dir
-(global-set-key (kbd "C-c m")
- (lambda ()
- (interactive)
-  (magit-status)))
-; Quick previous buffer
-(global-set-key (kbd "C-c b")
- (lambda ()
- (interactive)
- (previous-buffer)))
-; Quick next buffer
-(global-set-key (kbd "C-c f")
- (lambda ()
- (interactive)
- (next-buffer)))
-; Quick toggle buffer
-(global-set-key (kbd "C-c t")
- (lambda ()
- (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1))))
-; Man pages
-(global-set-key (kbd "C-c M")
- (lambda ()
- (interactive)
-  (woman)))
-; Get date and time
-(global-set-key (kbd "C-c d")
- (lambda ()
- (interactive)
-  (message (replace-regexp-in-string "\n$" ""
-  (shell-command-to-string "date +'%m-%d-%y|%H:%M'")))))
-; Recompile
-(global-set-key (kbd "C-c c")
- (lambda ()
- (interactive)
-  (save-buffer)
-  (recompile)))
-; Switch buffer
-(global-set-key (kbd "C-c b")
-  (lambda ()
-  (interactive)
-    (previous-buffer)))
-; Revert buffer
-(global-set-key (kbd "C-c r")
- (lambda ()
- (interactive)
-  (revert-buffer)))
-; Switch to shell buffer
-(global-set-key (kbd "C-c s")
- (lambda ()
- (interactive)
-  (switch-to-buffer "*shell*")))
-; Go to org-agenda
-(global-set-key (kbd "C-c a")
- (lambda ()
- (interactive)
-  (org-agenda)))
-; Quick shell buff switch
-(global-set-key (kbd "C-c x")
- (lambda ()
- (interactive)
-  (shell-command (read-from-minibuffer "run: "))))
+  ; Quick previous buffer
+  (global-set-key (kbd "C-c b")
+   (lambda ()
+   (interactive)
+   (previous-buffer)))
+  ; Quick next buffer
+  (global-set-key (kbd "C-c f")
+   (lambda ()
+   (interactive)
+   (next-buffer)))
+  ; Quick toggle buffer
+  (global-set-key (kbd "C-c t")
+   (lambda ()
+   (interactive)
+    (switch-to-buffer (other-buffer (current-buffer) 1))))
+  ; Man pages
+  (global-set-key (kbd "C-c M")
+   (lambda ()
+   (interactive)
+    (woman)))
+  ; Recompile
+  (global-set-key (kbd "C-c c")
+   (lambda ()
+   (interactive)
+    (save-buffer)
+    (recompile)))
+  ; Revert buffer
+  (global-set-key (kbd "C-c r")
+   (lambda ()
+   (interactive)
+    (revert-buffer)))
+  ; Switch to shell buffer
+  (global-set-key (kbd "C-c s")
+   (lambda ()
+   (interactive)
+    (switch-to-buffer "*shell*")))
+  ; Go to org dir
+  (global-set-key (kbd "C-c o")
+   (lambda ()
+   (interactive)
+    (dired "~/Documents/org")))
+  ; Go to org-agenda
+  (global-set-key (kbd "C-c a")
+   (lambda ()
+   (interactive)
+    (org-agenda)))
+  ; Quick shell buff switch
+  (global-set-key (kbd "C-c x")
+   (lambda ()
+   (interactive)
+    (shell-command (read-from-minibuffer "exec: "))))
 #+END_SRC
-
-#+RESULTS:
-| lambda | nil | (interactive) | (shell-command (read-from-minibuffer run: )) |
-
 ** Hooks
 #+BEGIN_SRC emacs-lisp
-; Emacs startup hook
-(add-hook `emacs-startup-hook
-  (lambda ()
-    (erase-buffer)
-    (shell)
-    (switch-to-buffer "*scratch*")
-    (delete-other-windows)
-    (global-company-mode)))
-; Save Hook deleting trailing whitespace
-(add-hook 'after-save-hook
- (lambda ()
-  (delete-trailing-whitespace)))
-; Kill compilation buff and win if succesful
-(add-hook 'compilation-finish-functions
- (lambda (buf str)
-  (if (null (string-match ".*exited abnormally.*" str))
-   (kill-buffer-and-window))))
+  ; Emacs startup hook
+  (add-hook `emacs-startup-hook
+    (lambda ()
+      (erase-buffer)
+      (shell)
+      (switch-to-buffer "*scratch*")
+      (delete-other-windows)
+      (global-company-mode)))
+  ; Save Hook deleting trailing whitespace
+  (add-hook 'after-save-hook
+    (lambda ()
+      (delete-trailing-whitespace)))
+  ; Kill compilation buff and win if succesful
+  (add-hook 'compilation-finish-functions
+    (lambda (buf str)
+      (if (null (string-match ".*exited abnormally.*" str))
+        (kill-buffer-and-window))))
+  ; Dired hook
+  (add-hook 'dired-mode-hook
+    (lambda ()
+      'dired-hide-details-mode))
+  ; Org hook
+  (add-hook 'org-mode-hook
+    (lambda ()
+      (valign-mode)
+      (setq-default fill-column 80)))
+  ; Prog hook
+  (add-hook 'prog-mode-hook
+    'rainbow-mode)
 #+END_SRC
-
-#+RESULTS:
-| lambda | (buf str) | (if (null (string-match .*exited abnormally.* str)) (kill-buffer-and-window)) |
-
 ** Visuals
 *** Basics
 #+BEGIN_SRC emacs-lisp
@@ -143,10 +118,6 @@
 (scroll-bar-mode -1)
 (setq inhibit-startup-screen t)
 #+END_SRC
-
-#+RESULTS:
-: t
-
 *** Shrink Tabs
 #+BEGIN_SRC emacs-lisp
 (setq-default indent-tabs-mode nil)
@@ -160,10 +131,6 @@
 (setq-default pythone-indent 2)
 (setq-default pythone-indent-offset 2)
 #+END_SRC
-
-#+RESULTS:
-: 2
-
 *** Lines
 #+BEGIN_SRC emacs-lisp
 (global-visual-line-mode t)
@@ -171,131 +138,121 @@
 (global-visual-line-mode 1)
 (setq-default frame-title-format "%b (%f)")
 #+END_SRC
-
-#+RESULTS:
-: %b (%f)
-
 *** Company Mode
 #+BEGIN_SRC emacs-lisp
-(custom-set-faces
- `(company-tooltip ((t (:inherit default :background "#BF55EC"))))
- `(company-scrollbar-bg ((t (:background "#220066"))))
- `(company-scrollbar-fg ((t (:background "#BF55EC"))))
- `(company-tooltip-selection ((t (:background "#663399"))))
- `(company-tooltip-common ((t (:background "#775599")))))
+  (custom-set-faces
+   `(company-tooltip ((t (:inherit default :background "#BF55EC"))))
+   `(company-scrollbar-bg ((t (:background "#220066"))))
+   `(company-scrollbar-fg ((t (:background "#BF55EC"))))
+   `(company-tooltip-selection ((t (:background "#663399"))))
+   `(company-tooltip-common ((t (:background "#775599"))))
+  )
 #+END_SRC
-*** Mode Line Setup for term
+*** Term Mode line
 #+BEGIN_SRC emacs-lisp
-(set-face-foreground 'mode-line "white")
-(set-face-background 'mode-line "#BF55EC")
-(setq-default mode-line-format (list
-  "<%b|%+>"
-  "<%m>"
-  "<%o|L:%l>"
-))
+  ; Modeline
+  (custom-set-faces
+   '(info-title-3 ((t (:foreground "#000000" :background "#990099"))))
+   '(info-title-4 ((t (:foreground "#FFFFFF" :background "#000000"))))
+   '(info-title-1 ((t (:foreground "#990099" :background "#000000"))))
+   '(info-title-2 ((t (:foreground "#000000" :background "#990099"))))
+   '(info-xref ((t (:foreground "#990099" :background "#000000"))))
+   '(mode-line ((t (:foreground "#FFFFFF" :background "#000000"))))
+   '(mode-line-inactive ((t (:foreground "#FFFFFF" :background "#000000"))))
+  )
+  (setq-default mode-line-format (list
+   '(:eval (propertize (concat " %b|%+ ") 'face '(info-title-3)))
+   '(:eval (propertize (concat "") 'face '(info-title-1)))
+   '(:eval (propertize (concat " %m ") 'face '(info-title-4)))
+   '(:eval (propertize (concat "") 'face '(info-title-2)))
+   '(:eval (propertize (concat " %o|L:%l ") 'face '(info-title-3)))
+   '(:eval (propertize (concat "") 'face '(info-xref)))
+  ))
+  ; Turn off bell
+  (setq visible-bell t)
+  ; Set font
+  (set-frame-font "inconsolata-11" nil t)
 #+END_SRC
-
-#+RESULTS:
-| <%b | %+> | <%m> | <%o | L:%l> |
-
-*** If Gui set new modeline and gui faces
+*** If Gui
 #+BEGIN_SRC emacs-lisp
-(when (display-graphic-p)
- ; Modeline
- (custom-set-faces
-  '(info-title-3 ((t (:inherit info-title-4 :foreground "white" :background "#BF55EC" :height 1.2))))
-  '(info-title-4 ((t (:inherit info-title-4 :foreground "white" :background "#663399"))))
-  '(mode-line ((t (:foreground "#FFFFFF" :background "#663399" :box nil))))
-  '(mode-line-inactive ((t (:foreground "#FFFFFF" :background "#441177" :box nil))))
- )
- (setq-default mode-line-format (list
-  '(:eval (propertize (concat " %b|%+ ") 'face '(info-title-3) 'help-echo (buffer-file-name)))
-  '(:eval (propertize (concat " %m ") 'face '(info-title-4) 'help-echo (buffer-file-name)))
-  '(:eval (propertize (concat " %o|L:%l ") 'face '(info-title-3) 'help-echo (buffer-file-name)))
-  '(:eval (propertize (- (+ right right-fring right-margin, + 3 (string-width mode-name)))))
- ))
- ; Set fg/bg color
- (set-foreground-color "white")
- (set-background-color "grey25")
- ; Dim inactive windows
- (auto-dim-other-buffers-mode t)
- ; Turn off bell
- (setq visible-bell t)
- ; Set font
- (set-frame-font "inconsolata-11" nil t)
- ; Remove key
- (global-unset-key (kbd "C-z")))
+  (when (display-graphic-p)
+   ; Modeline
+   (set-face-foreground 'mode-line "#FFFFFF")
+   (set-face-background 'mode-line "#000000")
+   (custom-set-faces
+    '(info-title-3 ((t (:foreground "#FFFFFF" :background "#663399"))))
+    '(info-title-4 ((t (:foreground "#FFFFFF" :background "#AA88EE"))))
+    '(info-title-1 ((t (:foreground "#663399" :background "#AA88EE"))))
+    '(info-title-2 ((t (:foreground "#AA88EE" :background "#663399"))))
+    '(info-xref ((t (:foreground "#663399" :background "#000000"))))
+    '(info-xref-visited ((t (:foreground "#AA88EE" :background "#000000"))))
+    '(mode-line ((t (:foreground "#FFFFFF" :background "#000000" :box nil :height 1.1))))
+    '(mode-line-inactive ((t (:foreground "#FFFFFF" :background "#000000" :box nil :height .85))))
+    '(auto-dim-other-buffers-face ((t (:foreground "#FFFFFF" :background "#111111" :box nil))))
+   )
+   (setq-default mode-line-format (list
+    '(:eval (propertize (concat " %b|%+ ") 'face '(info-title-3)))
+    '(:eval (propertize (concat "") 'face '(info-title-1)))
+    '(:eval (propertize (concat " %m ") 'face '(info-title-4)))
+    '(:eval (propertize (concat "") 'face '(info-title-2)))
+    '(:eval (propertize (concat " %o|L:%l ") 'face '(info-title-3)))
+    '(:eval (propertize (concat "") 'face '(info-xref)))
+   ))
+   ; Set fg/bg color
+   (set-foreground-color "#FFFFFF")
+   (set-background-color "#222222")
+   ; Opacity
+   (set-frame-parameter (selected-frame) 'alpha '(85 . 85))
+   (add-to-list 'default-frame-alist '(alpha . (85 . 85)))
+   ; Dim inactive windows
+   (auto-dim-other-buffers-mode t)
+   ; Turn off bell
+   (setq visible-bell t)
+   ; Set font
+   (set-frame-font "inconsolata-11" nil t)
+   ; Remove key
+   (global-unset-key (kbd "C-z"))
+  )
 #+END_SRC
-
-#+RESULTS:
-
 ** Functioning
-*** Emacs Client
-#+BEGIN_SRC emacs-lisp
-(server-start)
-#+END_SRC
 *** Yes-no to y-n
 #+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
+  (defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
-
-#+RESULTS:
-: yes-or-no-p
-
 *** Backups/autosave contained
 #+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist '(("." . "~/.emacs.d/saves")))
 (defvar autosave-dir (concat "~/.emacs.d/saves" "/"))
 #+END_SRC
-
-
-#+RESULTS:
-: autosave-dir
-
-*** Hide passwords
-asdf#+BEGIN_SRC emacs-lisp
-(setq comint-password-prompt-regexp
- (concat comint-password-prompt-regexp
-  "\\|^password:\\s *\\'"))
-asdf#+END_SRC
-
-#+RESULTS:
-: \(^ *\|\( SMB\|'s\|Bad\|CVS\|Enter\(?: \(?:Auth\|\(?:sam\|th\)e\)\)?\|Kerberos\|LDAP\|New\|Old\|PEM\|Re\(?:peat\|type\)\|SUDO\|UNIX\|\[sudo]\|enter\(?: \(?:auth\|\(?:sam\|th\)e\)\)?\|login\|new\|old\) +.*\)\(?:\(?:adgangskode\|contrase\(?:\(?:ny\|ñ\)a\)\|geslo\|h\(?:\(?:asł\|esl\)o\)\|iphasiwedi\|jelszó\|l\(?:ozinka\|ösenord\)\|m\(?:ot de passe\|ật khẩu\)\|p\(?:a\(?:rola\|s\(?:ahitza\|s\(?: phrase\|code\|ord\|phrase\|wor[dt]\)\|vorto\)\)\|in\)\|s\(?:alasana\|enha\|laptažodis\)\|wachtwoord\|лозинка\|пароль\|ססמה\|كلمة السر\|गुप्तशब्द\|शब्दकूट\|গুপ্তশব্দ\|পাসওয়ার্ড\|ਪਾਸਵਰਡ\|પાસવર્ડ\|ପ୍ରବେଶ ସଙ୍କେତ\|கடவுச்சொல்\|సంకేతపదము\|ಗುಪ್ತಪದ\|അടയാളവാക്ക്\|රහස්පදය\|ពាក្យសម្ងាត់\|パスワード\|密[码碼]\|암호\)\|Response\)\(?:\(?:, try\)? *again\| (empty for no passphrase)\| (again)\)?\(?: [[:alpha:]]+ .+\)?[[:blank:]]*[:：៖][[:blank:]]*\'\|^password:\s *\'
-
-** Dired
+*** Improve parens
 #+BEGIN_SRC emacs-lisp
-(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+  (smartparens-global-mode)
+  (global-highlight-parentheses-mode t)
+  (custom-set-variables
+    '(highlight-parentheses-background-colors '("#FFAAFF"))
+    '(highlight-parentheses-colors
+      '("#000000" "#FF11FF" "#BB11BB" "#991199" "#771187" "#661176" "#440154")))
+  (highlight-parentheses--color-update)
 #+END_SRC
-
-#+RESULTS:
-| dired-hide-details-mode |
-
 ** Orgmode
 #+BEGIN_SRC emacs-lisp
-(setq org-todo-keywords '(
- "TODO"
- "CURRENT"
- "TOSTART"
- "PAUSED"
- "BACKLOG"
- "WAITING"
- "|"
- "DONE"
- "CANCELLED"))
-(setq org-agenda-files '("~/Documents/life/todo.org"))
+  (setq org-todo-keywords '(
+   "TODO"
+   "CURRENT"
+   "TOSTART"
+   "PAUSED"
+   "BACKLOG"
+   "WAITING"
+   "|"
+   "DONE"
+   "CANCELLED"))
+  (setq org-agenda-files '("~/Documents/life/todo.org"))
 #+END_SRC
-
-#+RESULTS:
-| ~/Documents/life/todo.org |
-
 ** Diary
 #+BEGIN_SRC emacs-lisp
-(setq view-diary-entries-initially t
-  mark-diary-entries-in-calender t
-  number-of-diary-entries 100)
-(add-hook 'diary-display-hook 'fancy-diary-display)
-(add-hook 'today-visible-calander-hook 'calander-mark-today)
+  (setq view-diary-entries-initially t
+        mark-diary-entries-in-calender t
+    number-of-diary-entries 100)
+  (add-hook 'diary-display-hook 'fancy-diary-display)
+  (add-hook 'today-visible-calander-hook 'calander-mark-today)
 #+END_SRC
-
-#+RESULTS:
-| calander-mark-today |

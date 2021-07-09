@@ -1,53 +1,65 @@
-# Bashrc
+#############
+### Bashrc###
+#############
 
-# Exit if interactive
+
+# Basic setup
+## Exit if interactive
 [[ $- != *i* ]] && return
-# Cd home
+## Cd home
 cd $HOME
+
 # Bash Prompt
-SETLPUR='\e[48;2;191;95;236m'
-SETDPUR='\e[48;2;102;51;153m'
+## Create color variables
 SETUNDO='\e[0m'
-PS1=$(printf "\[${SETLPUR} $USER ${SETDPUR} \A ${SETLPUR} \w ${SETUNDO} \n${SETLPUR}run: ${SETUNDO}")
-# History options
+SETLPUR='\e[38;5;15;15;15m\e[48;2;150;100;240m'
+SETDPUR='\e[38;5;15;15;15m\e[48;2;100;50;150m'
+SETD2LPUR='\e[38;2;150;100;240m\e[48;2;100;50;150m'
+SETL2DPUR='\e[38;2;100;50;150m\e[48;2;150;100;240m'
+SETLPUREND="$SETUNDO"'\e[38;2;150;100;240m'
+SETDPUREND="$SETUNDO"'\e[38;2;100;50;150m'
+## Set prompt
+PS1=$(printf "\
+${SETDPUR} $USER ${SETL2DPUR}\
+${SETLPUR} \A ${SETD2LPUR}\
+${SETDPUR} \w ${SETDPUREND}${SETUNDO}\n\
+${SETDPUR}  exec:${SETDPUREND}${SETUNDO} ")
+
+# Bash Settings
+## History options
 HISTSIZE=50000
 HISTFILSIZE=55000
-# Shopt options
+## Shopt options
 shopt -s autocd cdspell
 shopt -s dotglob
 shopt -s nocaseglob
 shopt -s histappend
 shopt -s checkwinsize
-# Functions
+
+# Shortcuts
+## Aliases
+### Basic prog shortcut/alterations
+alias l='ls --color=auto --group-directories-first'
+alias p='sudo pacman'
+alias f='fg'
+alias e='emacs -nw'
+alias v='vim'
+alias d='date +"%m-%d-%y|%H:%M"'
+alias qping='ping www.google.com -c 3'
+alias gdb='gdb -ex run -quiet  $1'
+### Gpg encrytion
+alias gpgencrypt='gpg --encrypt --sign --armor -r $USER $1'
+alias gpgdecrypt='gpg --decrypt $1'
+### Git commands
+alias gitreorg='git remote rm origin &&  git remote add origin link'
+alias gitcompush='read -p "Git Message: " MSG && git commit -m "$MSG" && git push'
+## Functions
+### Create executable
 mkexe(){
     touch $1
     chmod +x $1
 }
-ffstrrec(){
-    DATE=$(date +"%m-%d-%y_%H:%M")
-    ffmpeg -y -f x11grab -s 1366x768 -i :0.0 -f alsa -i default $DATE-recorig.mkv
-    cp $DATE-recorig.mkv $DATE-reccopy.mkv
+### Alter screen brightness in Xorg
+xrandrbl(){
+    xrandr --output $1 --brightness $2
 }
-ffextraudio(){
-    ffmpeg -i $1 -vn -acodec copy $(echo $1 | cut -f 1 -d '.')-audio.ogg
-}
-ffsplice(){
-    ffmpeg -i $1 -ss $2 -to $3 -c copy $(echo $1 | cut -f 1 -d '.')-spliced.mkv
-}
-ffconcat(){
-    ffmpeg -i $1 -i $2 -filter_complex "[0:v][0:a][1:v][1:a] concat=n=2:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" $(echo $1 | cut -f 1 -d '.')_$(echo $2 | cut -f 1 -d '.')-concat.mkv
-}
-# aliases
-alias l='ls --color=auto --group-directories-first'
-alias p='doas pacman'
-alias f='fg'
-alias e='emacsclient -nw --create-frame $1'
-alias d='date +"%m-%d-%y|%H:%M"'
-alias rootprev='doas !!'
-alias qping='ping www.google.com -c 3'
-alias setxkbswapcaps='setxkbmap -option ctrl:swapcaps'
-alias gdbrun='gdb -ex run -quiet  $1'
-alias gpgencrypt='gpg --encrypt --sign --armor -r $USER $1'
-alias gpgdecrypt='gpg --decrypt $1'
-alias gitreorg='git remote rm origin &&  git remote add origin link'
-alias gitcpp='read -p "Git Message: " MSG && git commit -m "$MSG" && git pull && git push'

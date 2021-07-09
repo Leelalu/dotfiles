@@ -1,40 +1,53 @@
 -- Xmonad conf
 
+
 -- Imports
 import XMonad
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
-import XMonad.Layout.Grid
+import XMonad.Layout.Spiral
 import XMonad.Actions.CycleWS
 import XMonad.StackSet
 import Data.Monoid
 import Data.Map
 import System.Exit
 
+
 -- Main func applying values to Xconf record
 main = do xmonad $ def{
  -- Mouse settings
  focusFollowsMouse = True,
  clickJustFocuses =True,
+
  -- Window borders
- normalBorderColor = "#663399",
- focusedBorderColor = "#BF55EC",
+ normalBorderColor = "#331177",
+ focusedBorderColor = "#663399",
  borderWidth = 3,
+
  -- Layouts
- layoutHook = spacing 10 (smartBorders Grid) ||| noBorders Full,
+ layoutHook = spacing 10 (smartBorders (spiral (6/7))) ||| noBorders Full,
  -- Workspaces
  XMonad.workspaces = ["Main", "Spare"],
+
  -- Manage Hooks
  manageHook = composeAll [
   className =? "android-studio" --> doFloat],
+
  -- Set modm to alt for initiating floating window managment exclusively
  modMask = mod1Mask,
- -- Apply keys
+
+ -- Set keysbinds
  XMonad.keys = \conf -> Data.Map.fromList $ [
+  -- Translation
+    ((mod4Mask, xK_e), spawn "dmenueo2en")
+  , ((mod4Mask .|. shiftMask, xK_e), spawn "dmenuen2eo")
+  -- Translation
+  , ((mod4Mask, xK_a), spawn "/usr/local/bin/vecrat 34 433")
+  , ((mod4Mask .|. shiftMask, xK_a), spawn "alafont --dec")
   -- Launch term
-    ((mod4Mask, xK_t), spawn "alacritty")
+  , ((mod4Mask, xK_t), spawn "alacritty")
   -- Dmenu
-  , ((mod4Mask, xK_x), spawn "dmenu_run -nb '#1e1e1e' -sf '#ffffff' -sb '#663399' -nf '#ffffff' -p 'run:'")
+  , ((mod4Mask, xK_x), spawn "env LC_ALL=en_US.UTF-8 dmenu_run -nb '#1e1e1e' -sf '#ffffff' -sb '#663399' -nf '#ffffff' -p 'run:'")
   -- Dmenu status
   , ((mod4Mask, xK_d), spawn "~/bin/dmenustatus")
   -- Cmus pause toggle
@@ -50,10 +63,13 @@ main = do xmonad $ def{
   , ((mod4Mask, xK_b), nextWS)
   -- Swap  focused window with next window/to next workspace
   , ((mod4Mask .|. shiftMask, xK_o), windows XMonad.StackSet.swapDown)
-  , ((mod4Mask .|. shiftMask, xK_b), shiftToNext >> nextWS)
+  , ((mod4Mask .|. shiftMask, xK_b), shiftToNext)
+  -- Next screen
+  , ((mod4Mask, xK_f), nextScreen)
+  , ((mod4Mask .|. shiftMask, xK_f), shiftNextScreen)
   -- Vecrat/Xdotool for keyboard mouse interface
-  , ((mod4Mask, xK_y), spawn "vecrat 111 111")
-  , ((mod4Mask, xK_i), spawn "vecrat 999 999")
+  , ((mod4Mask, xK_y), spawn "vecrat --stop")
+  , ((mod4Mask, xK_i), spawn "vecrat --exit")
   , ((mod4Mask, xK_h), spawn "vecrat -10 0")
   , ((mod4Mask, xK_j), spawn "vecrat 0 10")
   , ((mod4Mask, xK_k), spawn "vecrat 0 -10")
@@ -68,8 +84,7 @@ main = do xmonad $ def{
   , ((mod4Mask, xK_u), spawn "killall unclutter; unclutter -idle 1")
   , ((mod4Mask .|. shiftMask, xK_u), spawn "killall unclutter")
   -- I3Lock
-  , ((mod4Mask , xK_z), spawn "i3lock --blur=1 --color=111111 --insidevercolor=D8BFD8 --insidewrongcolor=8B7B8B --insidecolor=BF55EC --ringvercolor=E066FF --ringwrongcolor=816687 --ringcolor=663399 --keyhlcolor=8B3A62")
-  , ((mod4Mask  .|. shiftMask, xK_z), spawn "xset s 1; i3lock --blur=1 --color=111111 --insidevercolor=D8BFD8 --insidewrongcolor=8B7B8B --insidecolor=BF55EC --ringvercolor=E066FF --ringwrongcolor=816687 --ringcolor=663399 --keyhlcolor=8B3A62; xset s 1000")
+  , ((mod4Mask .|. shiftMask , xK_z), spawn "i3lock --blur=1 --color=111111 --insidevercolor=D8BFD8 --insidewrongcolor=8B7B8B --insidecolor=BF55EC --ringvercolor=E066FF --ringwrongcolor=816687 --ringcolor=663399 --keyhlcolor=8B3A62")
   -- Quit/Restart xmonad
   , ((mod4Mask, xK_s) , spawn "xmonad --recompile; xmonad --restart")
   , ((mod4Mask .|. shiftMask, xK_q) , io (exitWith ExitSuccess))]}

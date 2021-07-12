@@ -177,8 +177,8 @@
  (set-foreground-color "#FFFFFF")
  (set-background-color "#222222")
  ; Opacity
- (set-frame-parameter (selected-frame) 'alpha '(85 . 85))
- (add-to-list 'default-frame-alist '(alpha . (85 . 85)))
+ (set-frame-parameter (selected-frame) 'alpha '(70 . 70))
+ (add-to-list 'default-frame-alist '(alpha . (70 . 70)))
  ; Dim inactive windows
  (auto-dim-other-buffers-mode t)
  ; Turn off bell

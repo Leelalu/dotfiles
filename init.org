@@ -152,13 +152,14 @@
 #+BEGIN_SRC emacs-lisp
   ; Modeline
   (custom-set-faces
-   '(info-title-3 ((t (:foreground "#000000" :background "Magenta"))))
-   '(info-title-4 ((t (:foreground "#FFFFFF" :background "#000000"))))
-   '(info-title-1 ((t (:foreground "#990099" :background "#000000"))))
-   '(info-title-2 ((t (:foreground "#000000" :background "#990099"))))
-   '(info-xref ((t (:foreground "#990099" :background "#000000"))))
-   '(mode-line ((t (:foreground "#FFFFFF" :background "#000000"))))
-   '(mode-line-inactive ((t (:foreground "#FFFFFF" :background "#000000"))))
+   '(info-title-3 ((t (:foreground "#FFFFFF" :background "#5F00AF"))))
+   '(info-title-4 ((t (:foreground "#FFFFFF" :background "#AF5FFF"))))
+   '(info-title-1 ((t (:foreground "#5F00AF" :background "#AF5FFF"))))
+   '(info-title-2 ((t (:foreground "#AF5FFF" :background "#5F00AF"))))
+   '(info-xref ((t (:foreground "#5F00AF" :background "#000000"))))
+   '(info-xref-visited ((t (:foreground "#AF5FFF" :background "#000000"))))
+   '(mode-line ((t (:foreground "#FFFFFF" :background "#000000" :box nil :height 1.1))))
+   '(mode-line-inactive ((t (:foreground "#FFFFFF" :background "#000000" :box nil :height .85))))
   )
   (setq-default mode-line-format (list
    '(:eval (propertize (concat " %b|%+ ") 'face '(info-title-3)))

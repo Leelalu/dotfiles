@@ -1,16 +1,25 @@
 * Intro
-Config files for workflow
-These are all my files that I use for workflow and beauty, and hopefully you can learn from them.
+These are all my files that I use for workflow and beauty, hopefully you can find something that can be used in here :).
 * Config Descriptions
 ** Alacritty
-Sets up the Alacritty term emulator with opacity
+Sets up the Alacritty term emulator color/opacity/font
 ** Bashrc
-Settings altering bashrc including setting custom prompt, history size, adds functions, and aliases
+Settings altering bashrc including setting custom prompt, changing functions, and shortcuts
+** Qutebrowser(config.py)
+Changes color and positioning of ui elements.
+** Darkpur(cmus theme)
+My purple cmus colorscheme.
+** Dunst
+Set notifacation visuals and functionality
+** Gdb
+Better exit points
 ** Init.org
 Org file to tangle into init.el. Sets up emacs for my daily use.
-** mytheme.theme
-My cmus theme with colorscheme cooresponding to my desktop setup
+** Picom
+Determins the opacity, fade, and blure of windows.
+** Vimrc
+Sets up functionality and visuals for vim.
 ** Xinitrc
-Sets up the x server to fit monitor res, hide mouse, set wallpaper, swap caps w/ ctrl, then launch desktop enviroment.
+Setup x server to fit monitor res, launch picom, set wallpaper, set keyboard & mouse, then launch desktop enviroment.
 ** Xmonad.hs
 Applies variables directly to xconf record without var buffer. Sets mainly colorscheme, layouts, and keybindings

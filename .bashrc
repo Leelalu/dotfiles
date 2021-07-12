@@ -8,6 +8,8 @@
 [[ $- != *i* ]] && return
 # Cd home
 cd $HOME
+# Ensure 256 colors are reconized
+TERM=xterm-256color
 
 ###################
 ### Bash Prompt ###

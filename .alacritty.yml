@@ -1,12 +1,21 @@
-# colors
+### Alacritty ###
+#################
+
+##############
+### Colors ###
+##############
 primary:
  background: '#000000'
  foreground: '#EEEEEE'
 
-# opacity
-background_opacity: .85
+###############
+### Opacity ###
+###############
+background_opacity: .75
 
-# font
+############
+### Font ###
+############
 font:
  normal:
   family: inconsolata

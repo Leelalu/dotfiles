@@ -95,7 +95,7 @@
     (setq-default fill-column 80)))
 ; Prog hook
 (add-hook 'prog-mode-hook
-  'rainbow-mode)
+  (rainbow-mode))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -128,7 +128,7 @@
 
 ; Modeline
 (custom-set-faces
- '(info-title-3 ((t (:foreground "#000000" :background "#990099"))))
+ '(info-title-3 ((t (:foreground "#000000" :background "Magenta"))))
  '(info-title-4 ((t (:foreground "#FFFFFF" :background "#000000"))))
  '(info-title-1 ((t (:foreground "#990099" :background "#000000"))))
  '(info-title-2 ((t (:foreground "#000000" :background "#990099"))))
@@ -154,12 +154,12 @@
  (set-face-foreground 'mode-line "#FFFFFF")
  (set-face-background 'mode-line "#000000")
  (custom-set-faces
-  '(info-title-3 ((t (:foreground "#FFFFFF" :background "#663399"))))
-  '(info-title-4 ((t (:foreground "#FFFFFF" :background "#AA88EE"))))
-  '(info-title-1 ((t (:foreground "#663399" :background "#AA88EE"))))
-  '(info-title-2 ((t (:foreground "#AA88EE" :background "#663399"))))
-  '(info-xref ((t (:foreground "#663399" :background "#000000"))))
-  '(info-xref-visited ((t (:foreground "#AA88EE" :background "#000000"))))
+  '(info-title-3 ((t (:foreground "#FFFFFF" :background "#5F00AF"))))
+  '(info-title-4 ((t (:foreground "#FFFFFF" :background "#AF5FFF"))))
+  '(info-title-1 ((t (:foreground "#5F00AF" :background "#AF5FFF"))))
+  '(info-title-2 ((t (:foreground "#AF5FFF" :background "#5F00AF"))))
+  '(info-xref ((t (:foreground "#5F00AF" :background "#000000"))))
+  '(info-xref-visited ((t (:foreground "#AF5FFF" :background "#000000"))))
   '(mode-line ((t (:foreground "#FFFFFF" :background "#000000" :box nil :height 1.1))))
   '(mode-line-inactive ((t (:foreground "#FFFFFF" :background "#000000" :box nil :height .85))))
   '(auto-dim-other-buffers-face ((t (:foreground "#FFFFFF" :background "#111111" :box nil))))

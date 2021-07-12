@@ -1,4 +1,7 @@
-# Exit appon successful return of program
+### Gdb ###
+###########
+
+# Exit if successful return of program
 set $_exitcode = -999
 set height 0
 handle SIGTERM nostop print pass
@@ -10,5 +13,6 @@ define hook-stop
         shell echo | mail -s "NOTICE: app has stopped on unhandled signal" root
     end
 end
-# Disable asking of confirmation on exit
+
+# Disable confirmation on exit
 set confirm off

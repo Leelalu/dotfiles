@@ -23,7 +23,7 @@ SETD2LPUR='\e[38;5;135m\e[48;5;55m'
 SETLPUREND="$SETUNDO"'\e[38;5;135m'
 SETDPUREND="$SETUNDO"'\e[38;5;55m'
 # Set prompt
-PS1=$(printf "\n\
+PS1=$(printf "\
 ${SETDPUR} $USER ${SETL2DPUR}\
 ${SETLPUR} \A ${SETD2LPUR}\
 ${SETDPUR} \w ${SETDPUREND}${SETUNDO}\n\

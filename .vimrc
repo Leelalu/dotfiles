@@ -17,8 +17,6 @@ call plug#end()
 set autoindent
 " At line start use shiftwidth with tab
 set smarttab
-" Tab command line completion
-set wildmenu
 " Better command line completion
 set wildmenu
 " Show partial commands
@@ -66,6 +64,8 @@ endif
 """"""""""""""""""""
 """  Status line """
 """"""""""""""""""""
+" Set to always show statusline
+set laststatus=2
 " Create map for modeline
 let g:currentmode={ 'n'  : 'Normal', 'no' : 'Normal·Operator Pending', 'v'  : 'Visual', 'V'  : 'V·Line', '^V' : 'V·Block', 's'  : 'Select', 'S'  : 'S·Line', '^S' : 'S·Block', 'i'  : 'Insert', 'R'  : 'Replace', 'Rv' : 'V·Replace', 'c'  : 'Command', 'cv' : 'Vim Ex', 'ce' : 'Ex', 'r'  : 'Prompt', 'rm' : 'More', 'r?' : 'Confirm', '!'  : 'Shell', 't'  : 'Terminal'}
 "   Create Highlights
@@ -77,7 +77,6 @@ highlight sl1end   ctermfg=55 ctermbg=black
 highlight sl2end   ctermfg=135 ctermbg=black
 "   Empty & darken statusline
 set statusline=
-hi StatusLine ctermbg=black ctermfg=135
 "   Left side
 "    File info
 set statusline+=%#sl1#

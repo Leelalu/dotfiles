@@ -212,7 +212,7 @@
  "|"
  "DONE"
  "CANCELLED"))
-(setq org-agenda-files '("~/Documents/life/todo.org"))
+(setq org-agenda-files '("~/Documents/org"))
 
 (setq view-diary-entries-initially t
       mark-diary-entries-in-calender t

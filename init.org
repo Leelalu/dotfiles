@@ -247,7 +247,7 @@
    "|"
    "DONE"
    "CANCELLED"))
-  (setq org-agenda-files '("~/Documents/life/todo.org"))
+  (setq org-agenda-files '("~/Documents/org"))
 #+END_SRC
 ** Diary
 #+BEGIN_SRC emacs-lisp

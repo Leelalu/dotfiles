@@ -73,3 +73,6 @@ mkexe(){
 xrandrbl(){
     xrandr --output $1 --brightness $2
 }
+m(){
+	more $@ | cat
+}

@@ -95,7 +95,12 @@
     (setq-default fill-column 80)))
 ; Prog hook
 (add-hook 'prog-mode-hook
-  (rainbow-mode))
+  (lambda ()
+    (linum-mode)
+    (rainbow-mode)
+    (setq whitespace-line-column 80)
+    (setq whitespace-style '(face lines-tail))
+    (whitespace-mode)))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -103,20 +108,6 @@
 (setq inhibit-startup-screen t)
 
 (setq-default indent-tabs-mode nil)
-(setq tab-width 2)
-(setq js-indent-level 2)
-(setq css-indent-offset 2)
-(setq-default c-basic-offset 2)
-(setq c-basic-offset 2)
-(setq-default tab-width 2)
-(setq-default c-basic-indent 2)
-(setq-default pythone-indent 2)
-(setq-default pythone-indent-offset 2)
-
-(global-visual-line-mode t)
-(setq-default line-spacing 0)
-(global-visual-line-mode 1)
-(setq-default frame-title-format "%b (%f)")
 
 (custom-set-faces
  `(company-tooltip ((t (:inherit default :background "#BF55EC"))))

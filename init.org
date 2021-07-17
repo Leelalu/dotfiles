@@ -108,7 +108,12 @@
       (setq-default fill-column 80)))
   ; Prog hook
   (add-hook 'prog-mode-hook
-    (rainbow-mode))
+    (lambda ()
+      (linum-mode)
+      (rainbow-mode)
+      (setq whitespace-line-column 80)
+      (setq whitespace-style '(face lines-tail))
+      (whitespace-mode)))
 #+END_SRC
 ** Visuals
 *** Basics
@@ -121,22 +126,6 @@
 *** Shrink Tabs
 #+BEGIN_SRC emacs-lisp
 (setq-default indent-tabs-mode nil)
-(setq tab-width 2)
-(setq js-indent-level 2)
-(setq css-indent-offset 2)
-(setq-default c-basic-offset 2)
-(setq c-basic-offset 2)
-(setq-default tab-width 2)
-(setq-default c-basic-indent 2)
-(setq-default pythone-indent 2)
-(setq-default pythone-indent-offset 2)
-#+END_SRC
-*** Lines
-#+BEGIN_SRC emacs-lisp
-(global-visual-line-mode t)
-(setq-default line-spacing 0)
-(global-visual-line-mode 1)
-(setq-default frame-title-format "%b (%f)")
 #+END_SRC
 *** Company Mode
 #+BEGIN_SRC emacs-lisp

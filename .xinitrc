@@ -17,13 +17,18 @@ picom --experimental-backends &
 # Set bg
 feh --bg-scale $(ls -d ~/Documents/wp/* | shuf -n 1)
 # Xset options
-xset s 1000
+xset s 1000 &
+
+#################
+### Bluetooth ###
+#################
+blueman-applet &
 
 ###############################
 ### Keyboard/mouse settings ###
 ###############################
 # Set xmodmap options
-xmodmap .xmodmap
+xmodmap .Xmodmap
 # Hide mouse
 unclutter -idle 1 &
 

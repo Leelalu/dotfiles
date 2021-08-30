@@ -110,24 +110,27 @@
 (setq-default indent-tabs-mode nil)
 
 (custom-set-faces
- `(company-tooltip ((t (:inherit default :background "#BF55EC"))))
- `(company-scrollbar-bg ((t (:background "#220066"))))
- `(company-scrollbar-fg ((t (:background "#BF55EC"))))
- `(company-tooltip-selection ((t (:background "#663399"))))
- `(company-tooltip-common ((t (:background "#775599"))))
-)
-
-; Modeline
-(custom-set-faces
- '(info-title-3 ((t (:foreground "#FFFFFF" :background "#5F00AF"))))
- '(info-title-4 ((t (:foreground "#FFFFFF" :background "#AF5FFF"))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auto-dim-other-buffers-face ((t (:foreground "#FFFFFF" :background "#111111" :box nil))))
+ '(company-scrollbar-bg ((t (:background "#220066"))))
+ '(company-scrollbar-fg ((t (:background "#BF55EC"))))
+ '(company-tooltip ((t (:inherit default :background "#BF55EC"))))
+ '(company-tooltip-common ((t (:background "#775599"))))
+ '(company-tooltip-selection ((t (:background "#663399"))))
  '(info-title-1 ((t (:foreground "#5F00AF" :background "#AF5FFF"))))
  '(info-title-2 ((t (:foreground "#AF5FFF" :background "#5F00AF"))))
+ '(info-title-3 ((t (:foreground "#FFFFFF" :background "#5F00AF"))))
+ '(info-title-4 ((t (:foreground "#FFFFFF" :background "#AF5FFF"))))
  '(info-xref ((t (:foreground "#5F00AF" :background "#000000"))))
  '(info-xref-visited ((t (:foreground "#AF5FFF" :background "#000000"))))
  '(mode-line ((t (:foreground "#FFFFFF" :background "#000000" :box nil :height 1.1))))
- '(mode-line-inactive ((t (:foreground "#FFFFFF" :background "#000000" :box nil :height .85))))
-)
+ '(mode-line-inactive ((t (:foreground "#FFFFFF" :background "#000000" :box nil :height 0.85)))))
+
+; Modeline
+
 (setq-default mode-line-format (list
  '(:eval (propertize (concat " %b|%+ ") 'face '(info-title-3)))
  '(:eval (propertize (concat "") 'face '(info-title-1)))
@@ -188,9 +191,15 @@
 (smartparens-global-mode)
 (global-highlight-parentheses-mode t)
 (custom-set-variables
-  '(highlight-parentheses-background-colors '("#FFAAFF"))
-  '(highlight-parentheses-colors
-    '("#000000" "#FF11FF" "#BB11BB" "#991199" "#771187" "#661176" "#440154")))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(highlight-parentheses-background-colors '("#FFAAFF"))
+ '(highlight-parentheses-colors
+   '("#000000" "#FF11FF" "#BB11BB" "#991199" "#771187" "#661176" "#440154"))
+ '(package-selected-packages
+   '(evil smartparens rainbow-mode highlight-parentheses company auto-dim-other-buffers)))
 (highlight-parentheses--color-update)
 
 (setq org-todo-keywords '(

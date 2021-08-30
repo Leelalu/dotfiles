@@ -3,6 +3,7 @@ cp ~/.bashrc .
 cp ~/.gdbinit .
 cp ~/.xinitrc .
 cp ~/.vimrc .
+cp ~/.screenrc .
 cp ~/.config/picom.conf .
 cp ~/.config/dunst/dunstrc .
 cp ~/.config/cmus/DarkPur.theme .

@@ -26,6 +26,9 @@ set ignorecase
 set smartcase
 " Set hidden
 set hidden
+" Allow folding
+set foldenable
+set foldmethod=indent
 "  Remove trailing whitespace
 autocmd BufWritePre * :%s/\s\+$//e
 " Disable backspace
@@ -33,7 +36,12 @@ set backspace=
 " Auto commands for files
 filetype plugin on
 
-""""'""""""""""""""
+""""""""""""""""
+""" Keymaps """"
+""""""""""""""""
+noremap <C-s> :w<Enter>
+
+"""""""""""""""""""
 """ Set visuals """
 """""""""""""""""""
 " Enable line numbers
@@ -54,6 +62,13 @@ if has('syntax')
   syntax on
 endif
 
+""""""""""""""""""
+""" Programing """
+""""""""""""""""""
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
 """"""""""""""""""""
 """  Status line """
 """"""""""""""""""""
@@ -72,7 +87,7 @@ highlight sl2end   ctermfg=135 ctermbg=black
 set statusline=
 " Start Statusling
 "  File info
-set statusline+=\ %#sl1#%F%y\ %#sl122#
+set statusline+=%#sl1#\ %F%y\ %#sl122#
 "  File Type
 set statusline+=\ %#sl2#%t\ %#sl221#
 "  Byte size and current modifier info

@@ -1,0 +1,17 @@
+# Disable startup screen
+startup_message off
+
+# Amount of scroll lines
+defscrollback 1000
+
+screen -t SysMonitor 0 Glances
+screen -t Python 9 python
+screen -t Vim 8 vim $
+screen -t Proccessing2 7
+screen -t Proccessing 6
+screen -t Testing 5
+screen -t Spare3 4
+screen -t Spare2 3
+screen -t Spare 2
+screen -t Main 1
+

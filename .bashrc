@@ -1,13 +1,15 @@
 ### Bashrc ###
 ##############
-
-###################
 ### Basic setup ###
 ###################
 # Exit if interactive
 [[ $- != *i* ]] && return
+# Launch screen if not running
+[[ $TERM != "screen" ]] && exec screen -q
 # Cd home
 cd $HOME
+# Add ~/bin to $PATH
+export PATH="$HOME/bin:$PATH"
 # Ensure 256 colors are reconized
 TERM=xterm-256color
 
@@ -33,6 +35,7 @@ ${SETDPUR}  exec:${SETDPUREND}${SETUNDO} ")
 ### Bash Settings ###
 #####################
 # History options
+HISTCONTROL=ignoreboth
 HISTSIZE=50000
 HISTFILSIZE=55000
 # Shopt options
@@ -50,11 +53,15 @@ set -o vi
 # Aliases
 ## Basic prog shortcut/alterations
 alias l='ls --color=auto --group-directories-first'
+alias ll='ls -alF --color=auto --group-directories-first'
+alias la='ls -A --color=auto --group-directories-first'
 alias p='sudo pacman'
 alias f='fg'
 alias e='emacs -nw'
 alias v='vim'
 alias d='date +"%m-%d-%y|%H:%M"'
+alias bt='bluetoothctl'
+alias nmctrl='nmcli device wifi'
 alias qping='ping www.google.com -c 3'
 alias gdb='gdb -ex run -quiet  $1'
 ## Gpg encrytion
@@ -76,3 +83,5 @@ xrandrbl(){
 m(){
 	more $@ | cat
 }
+# help me
+alias btphone='bluetoothctl connect C8:C7:50:2B:2F:91'

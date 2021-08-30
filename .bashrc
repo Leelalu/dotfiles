@@ -2,10 +2,10 @@
 ##############
 ### Basic setup ###
 ###################
+# Reset screen
+clear
 # Exit if interactive
 [[ $- != *i* ]] && return
-# Launch screen if not running
-[[ $TERM != "screen" ]] && exec screen -q
 # Cd home
 cd $HOME
 # Add ~/bin to $PATH
@@ -29,7 +29,7 @@ PS1=$(printf "\
 ${SETDPUR} $USER ${SETL2DPUR}\
 ${SETLPUR} \A ${SETD2LPUR}\
 ${SETDPUR} \w ${SETDPUREND}${SETUNDO}\n\
-${SETDPUR}  exec:${SETDPUREND}${SETUNDO} ")
+${SETDPUR}  exec:${SETDPUREND} ${SETUNDO}")
 
 #####################
 ### Bash Settings ###
@@ -70,6 +70,7 @@ alias gpgdecrypt='gpg --decrypt $1'
 ## Git commands
 alias gitreorg='git remote rm origin &&  git remote add origin link'
 alias gitcompush='read -p "Git Message: " MSG && git commit -m "$MSG" && git push'
+## Bluetooth connecting
 # Functions
 ## Create executable
 mkexe(){
@@ -80,8 +81,26 @@ mkexe(){
 xrandrbl(){
     xrandr --output $1 --brightness $2
 }
+## Better cat output for multiple files
 m(){
 	more $@ | cat
 }
-# help me
-alias btphone='bluetoothctl connect C8:C7:50:2B:2F:91'
+## Connect to bt device by name
+btcon(){
+    bluetoothctl connect $(bluetoothctl devices | grep "$1" | cut -c 8-24)
+}
+
+# Launch screen
+## Create name for screen session
+SCREENNAME="LEELASCRSESSION"
+## If not currently in screen section check what to do
+if ! echo $STY | grep -q -e $SCREENNAME; then
+    ## If screen non-existant, create & attatch session
+    if ! screen -ls | grep -q -e $SCREENNAME; then
+        exec screen -S $SCREENNAME
+    fi
+    ## If screen exists then attach
+    if screen -ls | grep -e $SCREENNAME | grep -q -e Detached; then
+        exec screen -r $SCREENNAME
+    fi
+fi

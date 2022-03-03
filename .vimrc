@@ -1,58 +1,63 @@
-""" Vim """
-"""""""""""
+" Vim
 
-""""""""""""""""""""""""
-""" Enable vim-plugs """
-"""""""""""""""""""""""""
-call plug#begin('~/.vim/plugged')
-Plug 'junegunn/fzf.vim'
-Plug 'vim-python/python-syntax'
-Plug 'Rigellute/shades-of-purple.vim'
-call plug#end()
+"" Settings
+" Menus
+set wildmenu showcmd
+" Searching
+set ignorecase smartcase hlsearch
+" Line numbers
+set ruler number relativenumber
+" Text tabs
+set tabstop=2 softtabstop=2
+set shiftwidth=2
+set smarttab autoindent
+" Max tabs tabs
+set tabpagemax=15
+" Column limit
+set colorcolumn=80
+" Folding
+set foldenable foldmethod=indent
+" Cursor guides
+set cursorline cursorcolumn
 
-"""""""""""""""""""
-""" Functioning """
-"""""""""""""""""""
-" Use prev lines indent for newline
-set autoindent
-" At line start use shiftwidth with tab
-set smarttab
-" Better command line completion
-set wildmenu
-" Show partial commands
-set showcmd
-" Set ignore case unless cap is explicitally used
-set ignorecase
-set smartcase
-" Set hidden
-set hidden
-" Allow folding
-set foldenable
-set foldmethod=indent
-"  Remove trailing whitespace
-autocmd BufWritePre * :%s/\s\+$//e
-" Disable backspace
-set backspace=
+"" Keymaps
+" Editing shortcuts
+noremap zz :w<CR>
+noremap <C-e> :e<Space>
+noremap <C-b> :b<Space>
+" Quick Movement
+noremap <S-h> 0
+noremap <S-j> 10j
+noremap <S-k> 10k
+noremap <S-l> $
+" Windows
+noremap <C-h> <C-w>h
+noremap <C-j> <C-W>j
+noremap <C-k> <C-W>k
+noremap <C-l> <C-W>l
+" Tabs
+noremap tt gt
+noremap te :tabnew<CR>
+noremap td :tabclose<CR>
+noremap tj :tabp<CR>
+noremap tk :tabn<CR>
+
+"" Hooks
 " Auto commands for files
 filetype plugin on
-
-""""""""""""""""
-""" Keymaps """"
-""""""""""""""""
-noremap <C-s> :w<Enter>
-
-"""""""""""""""""""
-""" Set visuals """
-"""""""""""""""""""
-" Enable line numbers
-set relativenumber
-set number
-" Highlight searches
-set hlsearch
-" Set command win to two lines
-set cmdheight=2
-" Set colorscheme
-colorscheme shades_of_purple
+"  Remove trailing whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
+" Cursor line only on one window
+augroup CursorLine
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  au WinLeave * setlocal nocursorline
+augroup END
+augroup CursorColumn
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorcolumn
+  au WinLeave * setlocal nocursorcolumn
+augroup END
 " Syntax highlighting
 syntax enable
 if has('filetype')
@@ -62,45 +67,91 @@ if has('syntax')
   syntax on
 endif
 
-""""""""""""""""""
-""" Programing """
-""""""""""""""""""
-set tabstop=4
-set shiftwidth=4
-set expandtab
-
-""""""""""""""""""""
-"""  Status line """
-""""""""""""""""""""
-" Set to always show statusline
+""  Status line
+" Always show statusline
 set laststatus=2
-" Create map for modeline
-let g:currentmode={ 'n'  : 'Normal', 'no' : 'Normal·Operator Pending', 'v'  : 'Visual', 'V'  : 'V·Line', '^V' : 'V·Block', 's'  : 'Select', 'S'  : 'S·Line', '^S' : 'S·Block', 'i'  : 'Insert', 'R'  : 'Replace', 'Rv' : 'V·Replace', 'c'  : 'Command', 'cv' : 'Vim Ex', 'ce' : 'Ex', 'r'  : 'Prompt', 'rm' : 'More', 'r?' : 'Confirm', '!'  : 'Shell', 't'  : 'Terminal'}
+" Create map for better modeline status
+let g:currentmode={
+\ 'n'  : 'Normal',	'no' : 'Normal·Operator Pending',
+\	's'  : 'Select','S'  : 'S·Line', '^S' : 'S·Block', 'i'  : 'Insert',
+\	'v'  : 'Visual', 'V' : 'V·Line', '^V' : 'V·Block',
+\	'R'  : 'Replace', 'Rv' : 'V·Replace', 'c'  : 'Command',
+\	'r?' : 'Confirm', '!'  : 'Shell', 't'  : 'Terminal',
+\	'cv' : 'Vim Ex', 'ce' : 'Ex', 'r'  : 'Prompt', 'rm' : 'More'}
 " Create Highlights
-highlight sl1   ctermfg=white ctermbg=55
-highlight sl2   ctermfg=white ctermbg=135
-highlight sl122   ctermfg=55 ctermbg=135
-highlight sl221   ctermfg=135 ctermbg=55
-highlight sl1end   ctermfg=55 ctermbg=black
-highlight sl2end   ctermfg=135 ctermbg=black
-"   Empty/darken statusline
+hi sldpur   ctermfg=white ctermbg=55
+hi sllpur   ctermfg=white ctermbg=135
+hi sld2l   ctermfg=55 ctermbg=135
+hi sll2d   ctermfg=135 ctermbg=55
+hi sldend   ctermfg=55 ctermbg=235
+hi slmid   ctermfg=235 ctermbg=235
+"   Empty statusline var
 set statusline=
-" Start Statusling
+" Fill in statusline
 "  File info
-set statusline+=%#sl1#\ %F%y\ %#sl122#
+set statusline+=%#sldpur#\ %F%y\ %#sld2l#
 "  File Type
-set statusline+=\ %#sl2#%t\ %#sl221#
+set statusline+=\ %#sllpur#%t\ %#sll2d#
 "  Byte size and current modifier info
-set statusline+=\ %#sl1#ByteSize:%{getfsize(expand(@%))}%m%r%h%w\ %#sl1end#
+set statusline+=\ %#sldpur#ByteSize:%{getfsize(expand(@%))}%m%r%h%w\ %#sldend#
 "   Switch side
-set statusline+=%=
+set statusline+=%#slmid#%=
 "  Start  right side
-set statusline+=%#sl1end#
+set statusline+=%#sldend#
 "  Percentage through file
-set statusline+=%#sl1#\ %p%%\ %#sl221#\ 
+set statusline+=%#sldpur#\ %p%%\ %#sll2d#\ 
 "  Cursor placement
-set statusline+=%#sl2#\ %c-%l:%L%#sl122#\ 
+set statusline+=%#sllpur#\ %c-%l:%L%#sld2l#\ 
 "  Current mode
-set statusline+=%#sl1#\ %{get(g:currentmode,mode())}
-"  Reset highlighting for vim
-hi Normal guibg=NONE ctermbg=NONE
+set statusline+=%#sldpur#\ %{get(g:currentmode,mode())}
+
+"" Themeing
+" Editor Info
+hi Normal				 ctermfg=NONE ctermbg=NONE cterm=NONE
+hi StatusLine    ctermfg=234  ctermbg=234  cterm=NONE
+hi StatusLineNC  ctermfg=84   ctermbg=234  cterm=NONE
+hi VertSplit     ctermfg=NONE ctermbg=234  cterm=NONE
+hi ColorColumn   ctermfg=NONE ctermbg=238  cterm=NONE
+hi LineNr        ctermfg=140  ctermbg=235  cterm=NONE
+hi CursorLineNr  ctermfg=135  ctermbg=235  cterm=NONE
+hi CursorLine    ctermfg=NONE ctermbg=240  cterm=NONE
+hi CursorColumn  ctermfg=NONE ctermbg=242  cterm=NONE
+hi TabLine       ctermfg=140  ctermbg=235  cterm=NONE
+hi TabLineSel    ctermfg=11   ctermbg=135  cterm=NONE
+hi TabLineFill   ctermfg=NONE ctermbg=234  cterm=NONE
+" Menus
+hi WildMenu      ctermfg=NONE ctermbg=234  cterm=NONE
+hi PMenu         ctermfg=130  ctermbg=135  cterm=NONE
+hi PMenuSel      ctermfg=159  ctermbg=236  cterm=NONE
+" Searching
+hi Search        ctermfg=NONE ctermbg=97   cterm=NONE
+hi IncSearch     ctermfg=234  ctermbg=11   cterm=NONE
+hi SpellBad      ctermfg=204  ctermbg=NONE cterm=NONE
+" Unique text
+hi Special       ctermfg=159  ctermbg=NONE cterm=NONE
+hi Underlined    ctermfg=202  ctermbg=NONE cterm=underline
+hi MatchParen    ctermfg=195  ctermbg=91   cterm=BOLD
+hi Folded        ctermfg=140  ctermbg=234  cterm=NONE
+" Windows
+hi Title         ctermfg=159  ctermbg=NONE		 cterm=NONE
+hi NonText       ctermfg=140  ctermbg=NONE 	 cterm=NONE
+" Visual selection
+hi Visual        ctermfg=NONE ctermbg=97   cterm=NONE
+" Data types
+hi String        ctermfg=156  ctermbg=NONE cterm=NONE
+hi Number        ctermfg=160  ctermbg=NONE cterm=NONE
+hi Constant      ctermfg=110  ctermbg=NONE cterm=NONE
+hi Structure     ctermfg=172  ctermbg=NONE cterm=NONE
+" Language constructs
+hi Comment       ctermfg=135  ctermbg=NONE cterm=NONE
+hi Type          ctermfg=121  ctermbg=NONE cterm=NONE
+hi Identifier    ctermfg=11   ctermbg=NONE cterm=NONE
+hi Function      ctermfg=214  ctermbg=NONE cterm=NONE
+hi Conditional	 ctermfg=2		ctermbg=NONE cterm=NONE
+" Language utils, pipes/builtinfuncs
+hi Operator      ctermfg=135  ctermbg=NONE cterm=NONE
+hi StorageClass  ctermfg=214  ctermbg=NONE cterm=NONE
+" Errors
+hi Error         ctermfg=203  ctermbg=NONE cterm=underline
+hi ErrorMsg      ctermfg=203  ctermbg=NONE cterm=underline
+hi WarningMsg    ctermfg=220  ctermbg=NONE cterm=NONE

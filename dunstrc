@@ -2,9 +2,7 @@
 #############
 
 [global]
-    ###############
-    ### Display ###
-    ###############
+    ### Display
     # Monitor for notifications
     monitor = 0
     # Display on focused monitor (mouse/keyboard/none)
@@ -12,9 +10,7 @@
 
 
 
-    ###############################
-    ### Notifacation appearence ###
-    ###############################
+    ### Notifacation appearence
     # Geometry of window [{width}]x{height}[+/-{x}+/-{y}]
     geometry = "300x5-30+20"
     # Show hidden message amount
@@ -88,19 +84,15 @@
 
 
 
-    ###############
-    ### History ###
-    ###############
+    ### History
     # Notifications recalled from history will not time out automatically
     sticky_history = yes
-    # Maximum notification amount history save
+    # Maximum notification amount in history
     history_length = 20
 
 
 
-    #############
-    ### Mouse ###
-    #############
+    ### Mouse
     # Define list of actions by mouse (none/do_action/close_current/close_all)
     mouse_left_click = close_current
     mouse_middle_click = do_action, close_current
@@ -108,9 +100,7 @@
 
 
 
-    #####################
-    ### Misc/Advanced ###
-    #####################
+    ### Misc/Advanced
     # dmenu path
     dmenu = /usr/bin/dmenu -p dunst:
     # Always run rule-defined scripts, even if notifications suppressed

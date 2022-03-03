@@ -1,14 +1,8 @@
 #!/bin/bash
 cp ~/.bashrc .
-cp ~/.gdbinit .
 cp ~/.xinitrc .
 cp ~/.vimrc .
-cp ~/.screenrc .
-cp ~/.config/picom.conf .
 cp ~/.config/dunst/dunstrc .
-cp ~/.config/cmus/DarkPur.theme .
-cp ~/.config/qutebrowser/config.py .
-cp ~/.alacritty.yml .
-cp ~/.emacs.d/init.org .
-cp ~/.emacs.d/init.el .
-cp ~/.xmonad/xmonad.hs .
+cp ~/.config/picom.conf .
+cp ~/Documents/prog/suckless/st/config.h ./st.config.h
+cp ~/Documents/prog/suckless/dwm/config.h ./dwm.config.h

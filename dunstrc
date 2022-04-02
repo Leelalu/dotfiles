@@ -1,5 +1,4 @@
-### Dunst ###
-#############
+### Dunstrc
 
 [global]
     ### Display
@@ -48,9 +47,7 @@
 
 
 
-    ############
-    ### Text ###
-    ############
+    ### Text
     # Font type
     font = Monospace 8
     # Spacing between lines
@@ -70,9 +67,7 @@
 
 
 
-    #############
-    ### Icons ###
-    #############
+    ### Icons
     # Align icons (left/right/off)
     icon_position = right
     # Set min icon size
@@ -116,24 +111,14 @@
     # Use Xinerama extension instead of RandR for multi-monitor support
     force_xinerama = false
 
-
-
-    #################
-    ### Shortcuts ###
-    #################
+    ### Shortcuts
 [shortcuts]
     # Close notification
     close = ctrl+space
-
     # Close all notifications
     close_all = ctrl+shift+space
 
-
-
-
-    ##############
-    ### Colors ###
-    ##############
+    ### Colors
 [urgency_low]
     frame_color = "#331177"
     background = "#663399"

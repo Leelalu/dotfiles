@@ -2,7 +2,6 @@
 cp ~/bin/dwmstat.sh .
 cp ~/bin/xlight.sh .
 cp ~/.bashrc .
-cp ~/.bashrc .
 cp ~/.xinitrc .
 cp ~/.vimrc .
 cp ~/.config/dunst/dunstrc .

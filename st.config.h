@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /*
- * Config for a st0.8.4 install with these patches applied:
+ * Config for a st-0.8.4 install with these patches applied:
  *  alpha-0.8.2
  *  scrollback-0.8.4
  */
@@ -27,10 +27,10 @@ static double minlatency = 8;
 static double maxlatency = 33;
 
 // Appearance
-static char *font = "inconsolata:pixelsize=16:antialias=true:autohint=true";
+static char *font = "inconsolata:pixelsize=14:antialias=true:autohint=true";
 static int borderpx = 2;
 // Alpha
-float alpha = 0.6;
+float alpha = 0.7;
 // Switch some of the default 256 color codes
 static const char *colorname[] = {
 	// Normal colors
@@ -56,7 +56,7 @@ static const char *colorname[] = {
 	"#cccccc",
 	"#9988BB",
 	"#EEEEEE",
-	"#362448"
+	"#2C1C44"
 };
 // Terminal colors
 unsigned int defaultfg = 258;
@@ -83,8 +83,8 @@ static uint selmasks[] = {
 // Mouse
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release */
-	{ ShiftMask,            Button4, kscrollup,      {.i = 10} },
-	{ ShiftMask,            Button5, kscrolldown,    {.i = 10} },
+	{ ShiftMask,            Button4, kscrollup,      {.i = +10} },
+	{ ShiftMask,            Button5, kscrolldown,    {.i = -10} },
 	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
 	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
 	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"} },

@@ -2,20 +2,19 @@
 
 /*
  * Config for a dwm6.2 install with these patches applied:
- *	cyclelayouts-20180524-6.2
- *	fixborders-6.2
- *	focusonclick-20200110-61bb8b2
- *	fullgaps-6.2
- *	movestack-20211115-a786211
- *	stacker-6.2
- *	statusallmons-6.2
- *	tagswapmon-6.2
+ *		dwm-cyclelayouts-20180524-6.2
+ *		dwm-fullgaps-6.2
+ *		dwm-tagswapmon-6.2
+ *		dwm-fixborders-6.2
+ *		dwm-movestack-20211115-a786211
+ *		dwm-focusonclick-20200110
+ *		dwm-statusallmons-6.2
  */
 
 #include "movestack.c"
 
 // Fonts
-static const char *fonts[]          = { "inconsolata:pixelsize=16:antialias=true:autohint=true" };
+static const char *fonts[]          = { "inconsolata:pixelsize=14:antialias=true:autohint=true" };
 // Mouse focus
 static const int focusonwheel       = 1;
 // Bars
@@ -50,8 +49,8 @@ static const Rule rules[] = {
 
 // Layouts
 static const Layout layouts[] = {
-	{ "[]=",      tile },
-	{ "[M]",      monocle },
+	{ "-|-",      tile },
+	{ "[0]",      monocle },
 	{ NULL,       NULL },
 };
 

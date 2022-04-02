@@ -1,5 +1,4 @@
-### Xinitrc ###
-###############
+### Xinitrc
 
 ### Monitor setup
 xrandr --newmode "1366x768_60.00"   85.25  1368 1440 1576 1784  768 771 781 798 -hsync +vsync
@@ -11,7 +10,7 @@ xrandr --output HDMI1 --mode 1366x768_60.00 --primary --auto --output eDP1 --mod
 # Start compositor
 picom &
 # Set bg
-feh --bg-scale $(ls -d ~/Documents/wp/* | shuf -n 1)
+feh --bg-scale $(ls -d ~/Documents/wp/*.jpg | shuf -n 1)
 # X screenblank off
 xset s off -dpms
 
@@ -25,4 +24,3 @@ while true;
 do
     dwm;
 done
-

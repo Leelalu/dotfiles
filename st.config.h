@@ -83,8 +83,8 @@ static uint selmasks[] = {
 // Mouse
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release */
-	{ ShiftMask,            Button4, kscrollup,      {.i = +10} },
-	{ ShiftMask,            Button5, kscrolldown,    {.i = -10} },
+	{ XK_ANY_MOD,           Button4, kscrollup,      {.i = 6} },
+	{ XK_ANY_MOD,           Button5, kscrolldown,    {.i = 6} },
 	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
 	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
 	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"} },
@@ -96,14 +96,14 @@ static MouseShortcut mshortcuts[] = {
 #define MODKEY Mod1Mask
 #define TERMMOD (ControlMask|ShiftMask)
 static Shortcut shortcuts[] = {
-	/* mask                 keysym          function        argument */
-  { TERMMOD,              XK_Page_Up,     kscrollup,      {.i = -8} },
-	{ TERMMOD,              XK_Page_Down,   kscrolldown,    {.i = -8} },
-	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
-	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
-	{ MODKEY|TERMMOD,       XK_Prior,       zoom,           {.f = +1} },
-	{ MODKEY|TERMMOD,       XK_Next,        zoom,           {.f = -1} },
-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
+	/* mask                         keysym          function        argument */
+	{ ShiftMask|ControlMask|MODKEY, XK_J,           kscrolldown,    {.i = 10} },
+	{ ShiftMask|ControlMask|MODKEY, XK_K,           kscrollup,      {.i = 10} },
+	{ ShiftMask|ControlMask|MODKEY, XK_H,           zoom,           {.f = +1} },
+	{ ShiftMask|ControlMask|MODKEY, XK_L,           zoom,           {.f = -1} },
+	{ ShiftMask|ControlMask|MODKEY, XK_space,       zoomreset,      {.f =  0} },
+	{ TERMMOD,                      XK_C,           clipcopy,       {.i =  0} },
+	{ TERMMOD,                      XK_V,           clippaste,      {.i =  0} },
 };
 
 // Terminal functinal key maps

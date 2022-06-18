@@ -6,6 +6,7 @@ Plug 'preservim/NERDTree'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'liuchengxu/vim-clap'
+Plug 'Leelalu/purpin-vimcolors'
 call plug#end()
 
 "" Settings

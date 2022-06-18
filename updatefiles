@@ -3,7 +3,7 @@ cp ~/bin/dwmstat.sh .
 cp ~/bin/xlight.sh .
 cp ~/.bashrc .
 cp ~/.xinitrc .
-cp ~/.vimrc .
+cp ~/.vim/vimrc .
 cp ~/.config/dunst/dunstrc .
 cp ~/.config/picom.conf .
 cp ~/Documents/prog/suckless/st/config.h ./st.config.h

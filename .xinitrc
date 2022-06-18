@@ -10,7 +10,8 @@ xrandr --output HDMI1 --mode 1366x768_60.00 --primary --auto --output eDP1 --mod
 # Start compositor
 picom &
 # Set bg
-feh --bg-scale $(ls -d ~/Documents/wp/*.jpg | shuf -n 1)
+WALLPAPERFILES=($(ls -1 ~/Documents/wp/*.jpg))
+feh --bg-scale ${WALLPAPERFILES[$((0 + $RANDOM % $(("${#WALLPAPERFILES[@]}"-1))))]}
 # X screenblank off
 xset s off -dpms
 

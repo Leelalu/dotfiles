@@ -11,7 +11,8 @@
 Add hook when saving buffers. Here if the buffer is named/located at "~/.config/dotfiles.org", tangle the buffer writing to the file directed by properties the text within source blocks. Will need to execute in emacs manually once and save for it to be added to ~/.emacs.d/init.el so it may auto tangle.
 #+begin_src emacs-lisp :results silent
 (defun tangle-dotfiles ()
-  (when (equal (buffer-file-name) "~/.config/dotfiles.org")
+  (when (equal (buffer-file-name)
+        (expand-file-name "~/.config/dotfiles.org"))
     (let ((prog-mode-hook nil))
       (org-babel-tangle))))
 (add-hook 'after-save-hook 'tangle-dotfiles)
@@ -32,7 +33,7 @@ the pre-installed files, packages, and custom files from "load-path".
 (require 'elfeed)
 (require 'recentf)
 
-; Add path to load customly installed/written elisp script
+; Add path to load customly installed/written emacs-lisp script
 (add-to-list 'load-path "~/.emacs.d/src/")
 ; Personally installed lisp files
 (require 'company)
@@ -157,6 +158,10 @@ the pre-installed files, packages, and custom files from "load-path".
     '("#000000" "#FF11FF" "#BB11BB" "#991199" "#771187" "#661176" "#440154")))
 (highlight-parentheses--color-update)
 #+end_src
+**** Line highlighting
+#+begin_src emacs-lisp
+(global-hl-line-mode)
+#+end_src
 *** Functioning
 **** Dired
 #+begin_src emacs-lisp :results silent
@@ -211,7 +216,7 @@ the pre-installed files, packages, and custom files from "load-path".
   version-control t)    
 #+end_src
 **** Recent files
-#+begin_src elisp
+#+begin_src emacs-lisp
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
@@ -223,13 +228,6 @@ the pre-installed files, packages, and custom files from "load-path".
               number-of-diary-entries 100)
 (add-hook 'diary-display-hook 'fancy-diary-display)
 (add-hook 'today-visible-calander-hook 'calander-mark-today)
-#+end_src
-**** Org
-#+begin_src emacs-lisp :results silent
-; Go to org dir
-(global-set-key (kbd "C-c o")
-  (lambda () (interactive)
-    (dired "~/Documents/org")))
 #+end_src
 **** Elfeed
 #+begin_src emacs-lisp :results silent
@@ -251,6 +249,9 @@ the pre-installed files, packages, and custom files from "load-path".
 
 (setq browse-url-browser-function 'eww-browse-url)
 #+end_src
+*** Hooks
+#+begin_src emacs-lisp
+#+end_src
 *** Keybinds
 #+begin_src emacs-lisp :results silent
 ; Revert buffer
@@ -260,7 +261,7 @@ the pre-installed files, packages, and custom files from "load-path".
 ; Switch to shell buffer
 (global-set-key (kbd "C-c s")
   (lambda () (interactive)
-    (switch-to-buffer "*shell*")))
+    (switch-to-buffer "*eshell*")))
 ; Quick previous buffer
 (global-set-key (kbd "C-c b")
   (lambda () (interactive)
@@ -286,6 +287,10 @@ the pre-installed files, packages, and custom files from "load-path".
   (lambda () (interactive)
     (save-buffer)
     (recompile)))
+; Org files
+(global-set-key (kbd "C-c o")
+  (lambda () (interactive)
+    (dired "~/Documents/org")))
 #+end_src
 *** Startup
 #+begin_src emacs-lisp :results silent
@@ -303,7 +308,7 @@ the pre-installed files, packages, and custom files from "load-path".
 :PROPERTIES:
 :header-args: :tangle ~/.emacs.d/themes/purpin-theme.el
 :END:
-#+begin_src elisp
+#+begin_src emacs-lisp
 (deftheme purpin
   "Created 2022-12-15.")
 
@@ -401,7 +406,7 @@ stty -ixon
 # Quick keys
 alias p='sudo pacman'
 alias f='fg'
-# Listing
+# Dir listing
 alias l='ls -F --color=always --group-directories-first'
 alias la='ls -AF --color=always --group-directories-first'
 alias ll='ls -AFlh --color=always --group-directories-first'
@@ -414,7 +419,7 @@ alias mpvshuf='mpv --shuffle *'
 alias valgrind='valgrind --leak-check=full --show-reachable=yes --leak-resolution=high --num-callers=100 --trace-children=yes'
 alias gitreorg='git remote rm origin &&  git remote add origin link'
 alias gitcompush='read -p "Git Message: " MSG && git commit -m "$MSG" && git push'
-alias emacs='TERM=xterm-256color emacs -nw'
+alias emacs='TERM=xterm-256color emacs'
 #+end_src
 *** Color var defining based on $TERM
 #+begin_src bash
@@ -506,7 +511,9 @@ import System.Exit
 myKeys conf = Data.Map.fromList([
  -- applications
  ((mod4Mask, xK_Return),          spawn "alacritty"),
- ((mod4Mask, xK_x),               spawn "dmenu_run -nb '#1e1e1e' -sf '#ffffff' -sb '#663399' -nf '#ffffff' -p 'run:'"),
+ ((mod4Mask, xK_x),               spawn "dmenu_run -p 'exec'"),
+ ((mod4Mask, xK_m),               spawn "~/bin/dmenu-vidplaylists.sh"),
+ ((mod4Mask .|. mod1Mask, xK_m),  spawn "~/bin/dmenu-movies.sh"),
  -- Volume
  ((mod4Mask .|. mod1Mask, xK_v),  spawn "pactl set-sink-volume @DEFAULT_SINK@ -3%"),
  ((mod4Mask, xK_v),               spawn "pactl set-sink-volume @DEFAULT_SINK@ +3%"),
@@ -514,7 +521,7 @@ myKeys conf = Data.Map.fromList([
  -- picom
  ((mod4Mask, xK_p),               spawn "cp ~/.config/picom.main.conf ~/.config/picom.conf && killall picom ; picom"),
  ((mod4Mask .|. mod1Mask , xK_p), spawn "cp ~/.config/picom.min.conf ~/.config/picom.conf && killall picom ; picom"),
- ((mod4Mask .|. shiftMask, xK_p), spawn"killall picom"),
+ ((mod4Mask .|. shiftMask, xK_p), spawn "killall picom"),
  -- rotate through layouts
  ((mod4Mask, xK_space ),          sendMessage NextLayout),
  -- Send all floating windows down
@@ -526,9 +533,6 @@ myKeys conf = Data.Map.fromList([
  ((mod4Mask .|. mod1Mask, xK_b), shiftToNext >> nextWS),
  -- Swap  focused window with next window/to next workspace
  ((mod4Mask .|. shiftMask, xK_o), windows XMonad.StackSet.swapDown),
- -- Expand/Shrink master area
- ((mod4Mask, xK_m),               sendMessage Expand),
- ((mod4Mask .|. shiftMask,xK_m),  sendMessage Shrink),
  -- Increase/Deincrement windows master area
  ((mod4Mask, xK_n ),              sendMessage (IncMasterN 1)),
  ((mod4Mask .|. shiftMask, xK_n), sendMessage (IncMasterN (-1))),
@@ -628,9 +632,9 @@ Config {
 #+begin_src bash
 xmonad ~/bin/strxmonad.sh
 plasma /usr/bin/startplasma-x11
-dwm  ~/bin/strdwm.sh
+dwm ~/bin/strdwm.sh
 cinnamon /usr/bin/cinnamon-session
-selection_bg 5
+selection_fg 5
 selection_fg 7
 #+end_src
 *** Alacritty

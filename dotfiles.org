@@ -1,1 +1,890 @@
-/media/bk/dotfiles.org
+#+BABEL: :cache yes
+#+PROPERTY: header-args :tangle yes
+#+STARTUP: overview
+
+* Dotfiles
+** Emacs
+:PROPERTIES:
+:header-args: :tangle ~/.emacs.d/init.el
+:END:
+*** Auto tangle dotfiles
+Add hook when saving buffers. Here if the buffer is named/located at
+"~/.config/dotfiles.org", tangle the buffer writing to the file directed by
+properties the text within source blocks. Will need to execute in emacs manually
+once and save or tangle for it to be added to ~/.emacs.d/init.el so it may auto
+tangle.
+#+begin_src emacs-lisp :results silent
+(defun tangle-dotfiles ()
+  (when (equal (buffer-file-name)
+               (expand-file-name "~/.config/dotfiles.org"))
+    (org-babel-tangle)))
+(add-hook 'after-save-hook 'tangle-dotfiles)
+#+end_src
+*** Load files
+Make sure we hae all the needed libraries/utils loaded for the config, all from
+the pre-installed files, packages, and custom files from "load-path".
+#+begin_src emacs-lisp :results silent
+; Built in
+(require 'package)
+(require 'compile)
+(require 'ob-tangle)
+; Installed packages
+(require 'valign)
+(require 'org-bullets)
+(require 'org-superstar)
+(require 'highlight-parentheses)
+(require 'elfeed)
+(require 'recentf)
+
+; Add path to load customly installed/written emacs-lisp script
+(add-to-list 'load-path "~/.emacs.d/src/")
+; Personally installed lisp files
+(require 'company)
+(require 'rainbow-mode)
+(require 'hl-line+)
+(require 'vline)
+(require 'col-highlight)
+(require 'company)
+#+end_src
+*** Packaging setup
+#+begin_src emacs-lisp :results silent
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(setq-default package-check-signature nil
+              use-package-verbose nil
+              package-enable-at-startup t)
+(package-initialize t)
+#+end_src
+*** Visuals
+**** Mode line
+Create a function for the modeline taking two lists of strings and ajust each to the left and right side of the window. Text will be passed through format-mode-line so any regular %-constructs, and may add face properties to text being passed in. Can be off centered when using emacs graphically.
+
+***** My mode line rendering function
+#+begin_src emacs-lisp :results silent
+(defun mode-line-renderer (l-list r-list)
+  (let ((r-just 0)
+        (r-promptstring "")
+        (l-promptstring "")
+        (full-prompt ""))
+
+  (mapc (lambda (x)
+          (setq r-promptstring (concat r-promptstring x)))
+        r-list)
+  (setq r-promptstring (eval (format-mode-line r-promptstring)))
+  (mapc (lambda (x)
+          (setq l-promptstring (concat l-promptstring x)))
+        l-list)
+  (setq l-promptstring (format-mode-line l-promptstring))
+  
+  (setq r-just (- (window-total-width)
+    (+ (length l-promptstring) (length r-promptstring))))
+  (setq full-prompt (concat 
+    l-promptstring
+    (make-string r-just ? )
+    r-promptstring))))
+#+end_src
+***** Define new faces just for the mode line
+#+begin_src emacs-lisp :results silent
+(defface ml-dark
+  '((t :foreground "#FFFFFF" :background "#5F00AF"))
+  "Dark color background" :group 'mode-line-hl)
+(defface ml-light
+  '((t :foreground "#FFFFFF" :background "#AF5FFF"))
+  "Light color background" :group 'mode-line-hl)
+(defface ml-darktolight
+  '((t :foreground "#5F00AF" :background "#AF5FFF"))
+  "Dark font with mode line color background" :group 'mode-line-hl)
+(defface ml-lighttodark
+  '((t :foreground "#AF5FFF" :background "#5F00AF"))
+  "Dark font with mode line color background" :group 'mode-line-hl)
+(defface ml-darkend
+  '((t :foreground "#5F00AF" :background "#000000"))
+  "Dark colored font with mode line color background" :group 'mode-line-hl)
+(defface ml-lightend
+  '((t :foreground "#AF4FFF" :background "#000000"))
+  "Ligh colored font with mode line color background" :group 'mode-line-hl)
+(custom-set-faces '(modeline
+  ((t (:foreground "#FFFFFF" :background "#000000")))))
+#+end_src
+***** Mode line r/l prompt strings
+#+begin_src emacs-lisp :results silent
+(defvar l-prompt (list
+  (propertize " "      'face '(ml-darkend))
+  (propertize "%b %+ "  'face '(ml-dark))
+  (propertize ""       'face '(ml-darktolight))
+  (propertize " %m "    'face '(ml-light))
+  (propertize ""       'face '(ml-darktolight))
+  (propertize "%I"    'face '(ml-dark))
+  (propertize ""       'face '(ml-darkend))))
+(defvar r-prompt (list
+  (propertize " "       'face '(ml-darkend))
+  (propertize " %z "     'face '(ml-dark))
+  (propertize ""       'face '(ml-darktolight))
+  (propertize " %c:%l " 'face '(ml-light))
+  (propertize ""       'face '(ml-darktolight))
+  (propertize "%s"    'face '(ml-dark))
+  (propertize " "       'face '(ml-darkend))))
+#+end_src
+***** Apply to the modeline
+#+begin_src emacs-lisp :results silent
+(setq-default mode-line-format '((:eval 
+  (mode-line-renderer l-prompt r-prompt))))
+(setq mode-line-format '((:eval 
+  (mode-line-renderer l-prompt r-prompt))))
+#+end_src
+**** Load theme
+#+begin_src emacs-lisp :results silent
+; Add personal theme dir to theme paths
+(add-to-list 'term-file-aliases
+             '("st-256color" . "xterm-256color"))
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(load-theme 'purpin t)
+(setq font-lock-maximum-decoration t)
+#+end_src
+**** Shrink tabs
+#+begin_src emacs-lisp :results silent
+(setq-default tab-width 2
+              indent-tabs-mode nil
+              tab-always-indent nil)
+#+end_src
+**** 80 line column indicator
+kjkl j lkj l kjl kj k ij iji j ij  io j oi j oij o ij oij o ij ioj  oijkk  kj kj
+kj kj 
+#+begin_src emacs-lisp :results silent
+(setq fill-column 80)
+(setq-default fill-column 80)
+(setq current-fill-column 80)
+(setq-default current-fill-column 80)
+#+end_src
+**** Make Parenthesis Look Nicer
+#+begin_src emacs-lisp :results silent
+(show-paren-mode)
+;(smartparens-global-mode)
+(if (display-graphic-p) (global-highlight-parentheses-mode t))
+(custom-set-variables
+  '(highlight-parentheses-colors
+    '("#000000" "#FF11FF" "#BB11BB" "#991199" "#771187" "#661176" "#440154")))
+(highlight-parentheses--color-update)
+#+end_src
+**** Line highlighting
+#+begin_src emacs-lisp
+(global-hl-line-mode)
+#+end_src
+*** Functioning
+**** Dired
+#+begin_src emacs-lisp :results silent
+(add-hook 'dired-mode-hook
+  (lambda ()
+    'dired-hide-details-mode))
+#+end_src
+**** File history
+#+begin_src emacs-lisp :results silent
+(setq-default
+  history-length 50
+  save-place-mode 1
+  recent-mode 1
+  savehist-mode 1)
+#+end_src
+**** Orgmode
+#+begin_src emacs-lisp :results silent
+(setq-default
+  org-agenda-files '("~/Documents/org/todo.org")
+  org-startup-indented nil
+  org-pretty-entities t
+  org-hide-emphasis-markers t
+  org-startup-with-inline-images t
+  org-image-actual-width '(300)
+  hl-line-mode nil
+  org-hide-emphasis-markers t
+  org-todo-keywords '(
+    "UNSTARTED"
+    "STUDYING"
+    "TODO"
+    "CURRENT"
+    "PAUSED"
+    "WAITING"
+    "|"
+    "DONE"
+    "CANCELLED"))
+(add-hook 'org-mode-hook           #'rainbow-mode)
+(add-hook 'progn-mode-hook           #'rainbow-mode)
+#+end_src
+**** Yes No Shortening
+#+begin_src emacs-lisp :results silent
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src
+**** Backups/Autosave contained to dir
+#+begin_src emacs-lisp :results silent
+(setq
+  backup-directory-alist '(("." . "~/.emacs.d/saves/"))
+  backup-by-copying t
+  delete-old-versions t
+  kept-new-versions 6
+  kept-old-versions 2
+  version-control t)    
+#+end_src
+**** Recent files
+#+begin_src emacs-lisp
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+#+end_src
+**** Diary
+#+begin_src emacs-lisp :results silent
+(setq-default view-diary-entries-initially t
+              mark-diary-entries-in-calender t
+              number-of-diary-entries 100)
+(add-hook 'diary-display-hook 'fancy-diary-display)
+(add-hook 'today-visible-calander-hook 'calander-mark-today)
+#+end_src
+**** Elfeed
+#+begin_src emacs-lisp :results silent
+(setq elfeed-feeds
+ '(    
+  ("https://www.democracynow.org/democracynow.rss" DemocracyNow)
+  ("https://rss.nytimes.com/services/xml/rss/nyt/US.xml" TNYT US news)
+  ("https://rss.nytimes.com/services/xml/rss/nyt/Arts.xml" TNYT Arts)
+  ("https://rss.nytimes.com/services/xml/rss/nyt/PersonalTech.xml" TNYT Pers tech)
+  ("https://feeds.feedburner.com/time/world" The Times)
+ ))
+(defun elfeed-entry-startup (buff)
+  (switch-to-buffer buff)
+  (olivetti-mode)
+  (display-line-numbers-mode 0)
+  (elfeed-show-refresh))
+
+(setq elfeed-show-entry-switch 'elfeed-entry-startup)
+
+(setq browse-url-browser-function 'eww-browse-url)
+#+end_src
+*** Hooks
+#+begin_src emacs-lisp
+#+end_src
+*** Keybinds
+#+begin_src emacs-lisp :results silent
+; Revert buffer
+(global-set-key (kbd "C-c r")
+  (lambda () (interactive)
+    (revert-buffer)))
+; Switch to shell buffer
+(global-set-key (kbd "C-c s")
+  (lambda () (interactive)
+    (switch-to-buffer "*eshell*")))
+; Quick previous buffer
+(global-set-key (kbd "C-c b")
+  (lambda () (interactive)
+   (previous-buffer)))
+; Quick next buffer
+(global-set-key (kbd "C-c f")
+  (lambda () (interactive)
+    (next-buffer)))
+; Quick toggle buffer
+(global-set-key (kbd "C-c t")
+  (lambda () (interactive)
+    (switch-to-buffer (other-buffer (current-buffer) 1))))
+; Quick shell buff switch
+(global-set-key (kbd "C-c x")
+  (lambda () (interactive)
+    (shell-command (read-from-minibuffer "exec: "))))
+; Man pages
+(global-set-key (kbd "C-c M")
+  (lambda () (interactive)
+    (woman)))
+; Recompile
+(global-set-key (kbd "C-c c")
+  (lambda () (interactive)
+    (save-buffer)
+    (recompile)))
+; Org files
+(global-set-key (kbd "C-c o")
+  (lambda () (interactive)
+    (dired "~/Documents/org")))
+; Dotfiles
+(global-set-key (kbd "C-c d")
+ (lambda () (interactive)
+  (find-file "/home/leela/.config/dotfiles.org")))
+#+end_src
+*** Startup
+#+begin_src emacs-lisp :results silent
+(erase-buffer)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(global-company-mode)
+(global-display-fill-column-indicator-mode)
+(setq inhibit-startup-screen t
+  visible-bell t
+  olivetti-style 'fancy)
+(delete-other-windows)
+#+end_src
+** Emacs Purpin Theme
+:PROPERTIES:
+:header-args: :tangle ~/.emacs.d/themes/purpin-theme.el
+:END:
+#+begin_src emacs-lisp
+(deftheme purpin
+  "Created 2022-12-15.")
+
+(custom-theme-set-variables
+ 'purpin
+ '(highlight-parentheses-colors '("#000000" "#FF11FF" "#BB11BB" "#991199" "#771187" "#661176" "#440154")))
+
+(custom-theme-set-faces
+ 'purpin
+
+ ; Basics
+ '(vertical-border ((t (:foreground "#262626" :background "#262626" :box nil))))
+ '(mode-line ((t (:foreground "#FFFFFF" :background "#000000" :box nil))))
+ '(mode-line-inactive ((t (:foreground "#FFFFFF" :background "#000000" :box nil))))
+ '(line-number ((t (:foreground "#AF87D7" :background "#262626" :box nil))))
+
+ ; Highlighting
+ '(hl-line                     ((t (:background "#222222"))))
+ '(col-highlight               ((t (:background "#303030"))))
+ '(fill-column-indicator       ((t (:foreground "#444444" :background "#444444"))))
+ '(show-paren-match            ((t (:foreground "#FFFFFF" :background "#550088" :box nil))))
+ '(show-paren-match-expression ((t (:foreground "#FFFFFF" :background "#441A8A" :box nil))))
+ '(font-lock-doc-face          ((t (:foreground "#DDAAFA"))))
+
+ ; Company
+ '(company-tooltip                  ((t (:background "#BF55EC"))))
+ '(company-scrollbar-bg             ((t (:background "#220066"))))
+ '(company-scrollbar-fg             ((t (:background "#BF55EC"))))
+ '(company-tooltip-selection        ((t (:background "#663399"))))
+ '(company-tooltip-common           ((t (:background "#775599"))))
+ '(company-preview-common           ((t (:background "#775599"))))
+ '(company-tooltip-annotation       ((t (:foreground "#F785D9"))))
+ '(company-echo                     ((t (:foreground "#F0C0F8"))))
+ '(company-preview                  ((t (:background "#804098"))))
+ '(company-preview-search           ((t (:background "#804098"))))
+ '(company-template-field           ((t (:background "#807598"))))
+ '(company-tooltip-search           ((t (:background "#8F609F"))))
+ '(company-tooltip-search-selection ((t (:background "#8F609F"))))
+
+ ; Org
+ '(font-lock-string-face       ((t (:foreground "#A570CA"))))
+ '(font-lock-comment-face      ((t (:foreground "#D55888"))))
+ ; org metadata
+ '(org-meta-line               ((t (:foreground "#B580D8"))))
+ '(org-drawer                  ((t (:foreground "#C580CA"))))
+ '(org-special-keyword         ((t (:foreground "#8580FF"))))
+ '(org-table                   ((t (:foreground "#CCCCCC"))))
+ ; blocks
+ '(org-block                   ((t nil)))
+ '(org-ellipsis                ((t nil)))
+ ; header colors
+ '(org-level-1                 ((t (:foreground "#CF73FF"))))
+ '(org-level-2                 ((t (:foreground "#B893B3"))))
+ '(org-level-3                 ((t (:foreground "#A050FF"))))
+ '(org-level-4                 ((t (:foreground "#C0509F"))))
+ '(org-level-5                 ((t (:foreground "#AD83EE"))))
+ '(org-level-6                 ((t (:foreground "#B543BF"))))
+ '(org-level-7                 ((t (:foreground "#CA80EE"))))
+ '(org-level-8                 ((t (:foreground "#A540ff")))))
+
+(provide-theme 'purpin)
+#+end_src
+** Bash
+:PROPERTIES:
+:header-args: :tangle ~/.bashrc
+:END:
+*** Options
+#+begin_src bash
+# Shell options
+shopt -s autocd cdspell
+shopt -s dotglob
+shopt -s nocaseglob
+shopt -s histappend
+shopt -s checkwinsize
+
+# Variable setting
+export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.cabal/bin:$PATH"
+export GUILE_LOAD="$HOME/.guile_lib:$GUILE_LOAD"
+export EDITOR=emacs
+export PAGER=less
+export LS_COLORS='rs=0:di=35;55:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=31;82:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:';
+HISTCONTROL=ignoreboth
+HISTSIZE=55000
+HISTFILSIZE=55000
+
+# Remove C-s suspension
+stty -ixon
+#+end_src
+*** Aliases
+#+begin_src bash
+# Quick keys
+alias p='sudo pacman'
+alias f='fg'
+# Dir listing
+alias l='ls -F --color=always --group-directories-first'
+alias la='ls -AF --color=always --group-directories-first'
+alias ll='ls -AFlh --color=always --group-directories-first'
+# Shortcuts
+alias del='mv -t ~/.trash $*'
+alias cp='cp -r'
+alias screenrecon='screen -d -RR "$USER.SCREEN"'
+alias qping='ping www.google.com -c 3'
+alias mpvshuf='mpv --shuffle *'
+alias valgrind='valgrind --leak-check=full --show-reachable=yes --leak-resolution=high --num-callers=100 --trace-children=yes'
+alias gitreorg='git remote rm origin &&  git remote add origin link'
+alias gitcompush='read -p "Git Message: " MSG && git commit -m "$MSG" && git push'
+alias emacs='TERM=xterm-256color emacs'
+#+end_src
+*** Color var defining based on $TERM
+#+begin_src bash
+if [ "$(printenv TERM)" == "linux" ]
+then
+	# Console colors
+	SETUNDO='\e[0m'
+	SETLPUR='\e[38;5;0m\e[48;5;7m'
+	SETDPUR='\e[38;5;7m\e[48;5;5m'
+	SETL2DPUR='\e[38;5;5m\e[48;5;7m'
+	SETD2LPUR='\e[38;5;7m\e[48;5;5m'
+	SETLPUREND="$SETUNDO"'\e[38;5;7m'
+	SETDPUREND="$SETUNDO"'\e[38;5;5m'
+	L_SEPERATOR=""
+	R_SEPERATOR=""
+else
+	# 256 colors
+	SETUNDO='\e[0m'
+	SETLPUR='\e[38;5;15m\e[48;5;135m'
+	SETDPUR='\e[38;5;15m\e[48;5;55m'
+	SETL2DPUR='\e[38;5;55m\e[48;5;135m'
+	SETD2LPUR='\e[38;5;135m\e[48;5;55m'
+	SETLPUREND="$SETUNDO"'\e[38;5;135m'
+	SETDPUREND="$SETUNDO"'\e[38;5;55m'
+	L_SEPERATOR=""
+	R_SEPERATOR=""
+fi
+#+end_src
+*** Startup
+#+begin_src bash
+if [ "$(printenv TERM)" == "linux" ]; then
+	tdm
+elif [ "$(printenv TERM)" == "dumb" ]; then
+ PS1="[\u] \A [\w]"
+else
+ PROMPTICONS="露﫵ﲤ"
+ RANDPROMPTICON=${PROMPTICONS:$(( RANDOM % ${#PROMPTICONS} )):1}
+ PS1=$(printf "\
+ ${SETDPUREND}${L_SEPERATOR}${SETDPUR} $USER ${RANDPROMPTICON} ${SETL2DPUR}${R_SEPERATOR}\
+ ${SETLPUR}  \A ${SETL2DPUR}\
+ ${SETL2DPUR}${L_SEPERATOR}${SETDPUR}󰒓 \j${SETDPUREND}${R_SEPERATOR}${SETUNDO}\n\
+    ${SETDPUREND}${L_SEPERATOR}${SETDPUR} \w${SETDPUREND}${R_SEPERATOR}${SETUNDO}\n\
+  ${SETDPUREND}${L_SEPERATOR}${SETDPUR} exec${SETDPUREND}${R_SEPERATOR}${SETUNDO} ")
+
+ export TERM=xterm-256color
+fi
+#+end_src
+** Screen
+:PROPERTIES:
+:header-args: :tangle ~/.screenrc
+:END:
+#+begin_src bash
+escape ^Zz
+startup_message off
+defscrollback 100000
+
+bind } history
+
+screen -t top   2 nice top
+screen -t cmus  3 nice cmus
+screen -t emacs 8 nice emacs
+screen -t bash  1 nice bash
+#+end_src
+** Desktop
+*** Xmonad
+:PROPERTIES:
+:header-args: :tangle ~/.xmonad/xmonad.hs
+:END:
+**** Imports
+#+begin_src haskell
+import XMonad
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Spacing
+import XMonad.Actions.CycleWS
+import XMonad.Actions.WithAll
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar.PP
+import XMonad.StackSet
+--import Graphics.X11.ExtraTypes.XF86
+import Data.Map
+import System.IO
+import System.Exit
+#+end_src
+**** Hotkeys
+#+begin_src haskell
+myKeys conf = Data.Map.fromList([
+ -- applications
+ ((mod4Mask, xK_Return),          spawn "alacritty"),
+ ((mod4Mask, xK_x),               spawn "dmenu_run -p 'exec'"),
+ ((mod4Mask, xK_w),               spawn "randwp.sh"),
+ -- Media
+ ((mod4Mask, xK_n),               spawn "~/bin/dmenu-vidplaylists.sh"),
+ ((mod4Mask .|. mod1Mask, xK_n),  spawn "~/bin/dmenu-movies.sh"),
+ ((mod4Mask, xK_m),               spawn "mpc toggle"),
+ ((mod4Mask .|. shiftMask, xK_m), spawn "alacritty -e ncmpcpp"),
+ -- Volume
+ ((mod4Mask .|. mod1Mask, xK_v),  spawn "pactl set-sink-volume @DEFAULT_SINK@ -3%"),
+ ((mod4Mask, xK_v),               spawn "pactl set-sink-volume @DEFAULT_SINK@ +3%"),
+ ((mod4Mask .|. shiftMask, xK_v), spawn "pactl set-sink-mute   @DEFAULT_SINK@ toggle"),
+ -- picom
+ ((mod4Mask, xK_p),               spawn "cp ~/.config/picom.main.conf ~/.config/picom.conf && killall picom ; picom"),
+ ((mod4Mask .|. mod1Mask , xK_p), spawn "cp ~/.config/picom.min.conf ~/.config/picom.conf && killall picom ; picom"),
+ ((mod4Mask .|. shiftMask, xK_p), spawn "killall picom"),
+ -- rotate through layouts
+ ((mod4Mask, xK_space ),          sendMessage NextLayout),
+ -- Send all floating windows down
+ ((mod4Mask .|. mod1Mask, xK_f ), sinkAll),
+ -- Window Focus
+ ((mod4Mask, xK_o),               windows XMonad.StackSet.focusDown),
+ ((mod4Mask .|. mod1Mask, xK_o),  windows XMonad.StackSet.focusUp),
+ ((mod4Mask, xK_b),               nextWS),
+ ((mod4Mask .|. mod1Mask, xK_b), shiftToNext >> nextWS),
+ -- Swap  focused window with next window/to next workspace
+ ((mod4Mask .|. shiftMask, xK_o), windows XMonad.StackSet.swapDown),
+ -- Close window
+ ((mod4Mask, xK_0),               kill),
+ -- Lock/Restart/Quit xmonad
+ ((mod4Mask , xK_z),              spawn "i3lock \
+  \ -B stigma \
+  \ --color=111111 \
+  \ --inside-color=B095CC --insidever-color=C8B0D6 --insidewrong-color=8B7B8B \
+  \ --ring-color=663399   --ringver-color=9086AF   --ringwrong-color=816687 \
+  \ --keyhl-color=A08AB0"),
+ ((mod4Mask, xK_r),               spawn "xmonad --recompile && xmonad --restart"),
+ ((mod4Mask .|. shiftMask, xK_q), io (exitWith ExitSuccess))])
+#+end_src
+**** Config
+#+begin_src haskell
+myConfig = def {
+ -- Window borders
+ normalBorderColor = "#AF5FFF",
+ focusedBorderColor = "#5F00AF",
+ borderWidth = 3,
+ -- Desktop
+ layoutHook = noBorders Full ||| spacing 10 (Tall 1 (3/100) (1/2)),
+ XMonad.workspaces = ["Main", "Rand"],
+ -- Mouse
+ focusFollowsMouse = False,
+ clickJustFocuses = False,
+ -- Keys
+ modMask = mod5Mask,
+ XMonad.keys = myKeys
+}
+#+end_src
+**** Main func
+#+begin_src haskell
+main :: IO ()
+main = xmonad
+     . ewmhFullscreen
+     . ewmh
+     . withEasySB (statusBarProp "xmobar -x 1" (pure def)) defToggleStrutsKey
+     $ myConfig
+#+end_src
+*** Xmobar
+:PROPERTIES:
+:header-args: :tangle ~/.xmobarrc
+:END:
+#+begin_src haskell
+Config {
+ overrideRedirect = True,
+ font     =    "xft:Nunito",
+ bgColor  =    "#383838",
+ fgColor  =    "#f8f8f2",
+ position =    Top,
+ border =      BottomB,
+ borderColor = "#A40AB4",
+ allDesktops = True,
+ commands = [ 
+  Run XMonadLog,
+
+  Run Cpu [
+    "--template", "<total>%",
+    "-L", "25",
+    "-H", "70",
+    "--high"  , "red",
+    "--normal", "green"
+   ] 10,
+  Run CoreTemp [
+    "--template", "<core0>°C",
+    "--Low"      , "70",
+    "--High"     , "80",
+--    "--low"      , "lightgreen",
+    "--normal"   , "lightorange",
+    "--high"     , "lightred"
+   ] 50,
+  Run Memory ["--template", "<usedratio>%"] 10,
+
+--  Run Com "getMasterVolume" [] "volumelevel" 10,  
+
+  Run Date "  %d-%m-%y  %H:%M:%S" "date" 10
+ ],
+
+ sepChar  = "%",
+ alignSep = "}{",
+ template = " %XMonadLog% }{ %cpu%  %coretemp%  %memory%    %date%  "
+-- template = " %XMonadLog% }{ %cpu%  %coretemp%  %memory%    %volumelevel%    %date%  "
+}
+#+end_src
+  Run Network "enp2s0" ["-L","0","-H","32","--normal","green","--high","red"] 10,
+  Run Network "wlp3s0" ["-L","0","-H","32","--normal","green","--high","red"] 10,
+
+ template = "  %XMonadLog% }{ %cpu%  %memory%   %enp2s0% %wlp3s0%    %volumelevel%   %date%  ",
+  Run Date "  %d-%m-%y <fc=#8be9fd>  %H:%M:%S</fc>" "date" 10,
+*** Dmenu
+#+begin_src c
+static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
+static int topbar = 1;
+static int centered = 1;
+static unsigned int lines      = 15;
+static int min_width = 400;
+static const char worddelimiters[] = " ";
+static unsigned int border_width = 5;
+static const char *fonts[] = {
+	"Consolataa:size=10"
+};
+
+static const char *colors[SchemeLast][2] = {
+	[SchemeNorm] = { "#ffffff", "#333333" },
+	[SchemeSel] =  { "#ffffff", "#663399" },
+	[SchemeOut] =  { "#880000", "#0000ff" },
+};
+
+static const unsigned int alpha = 0xb4;
+static const unsigned int alphas[SchemeLast][2] = {
+	[SchemeNorm] = { OPAQUE, alpha },
+	[SchemeSel] = { OPAQUE, alpha },
+	[SchemeOut] = { OPAQUE, alpha },
+
+};
+#+end_src
+*** tdm
+:PROPERTIES:
+:header-args: :tangle ~/.tdmrc
+:END:
+#+begin_src bash
+xmonad ~/bin/strxmonad.sh
+xmonadtest ~/bin/strxmonadtest.sh
+plasma /usr/bin/startplasma-x11
+dwm ~/bin/strdwm.sh
+cinnamon /usr/bin/cinnamon-session
+selection_fg 5
+selection_fg 7
+#+end_src
+*** Alacritty
+:PROPERTIES:
+:header-args: :tangle ~/.alacritty.yml
+:END:
+**** Appearence
+#+begin_src bash
+window:
+ opacity: 0.85
+colors:
+ primary:
+  background: '#4C4863'
+  foreground: '#ffffff'
+#+end_src
+**** Font
+#+begin_src bash
+font:
+ normal:
+  family: FiraCode Nerd Font
+  style: Regular
+ bold:
+  family: FiraCode Nerd Font
+  style: Bold
+ italic:
+  family: FiraCode Nerd Font
+  style: Italic
+ bold_italic:
+  family: FiraCode Nerd Font
+  style: Bold Italic
+ size: 10
+#+end_src
+*** Dunst
+:PROPERTIES:
+:header-args: :tangle ~/.config/dunst/dunstrc
+:END:
+**** Window
+#+begin_src bash
+[global]
+    monitor = 0
+    follow = mouse
+    title = Dunst
+    class = Dunst
+    startup_notification = false
+    ignore_dbusclose = false
+    force_xinerama = false
+#+end_src
+**** Appearence
+#+begin_src bash
+    geometry = "300x5-30+20"
+    indicate_hidden = yes
+    shrink = no
+    transparency = 15
+    notification_height = 0
+    separator_height = 2
+    padding = 8
+    horizontal_padding = 8
+    frame_width = 0
+    corner_radius = 10
+    frame_color = "#663399"
+    separator_color = frame
+    sort = yes
+    idle_threshold = 60
+    stack_duplicates = true
+    hide_duplicate_count = false
+    show_indicators = yes
+#+end_src
+**** Text
+#+begin_src bash
+    font = Monospace 8
+    line_height = 0
+    alignment = left
+    vertical_alignment = center
+    show_age_threshold = 0
+    word_wrap = yes
+    ellipsize = middle
+    ignore_newline = no
+#+end_src
+**** Icons
+#+begin_src bash
+    icon_position = right
+    min_icon_size = 0
+    max_icon_size = 32
+    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
+#+end_src
+**** History
+#+begin_src bash
+    sticky_history = yes
+    history_length = 20
+#+end_src
+**** Dmenu
+#+begin_src bash
+    dmenu = /usr/bin/dmenu -p dunst:
+    always_run_script = true
+#+end_src
+**** Keyboard Shortcuts
+#+begin_src bash
+[shortcuts]
+    close = ctrl+space
+    close_all = ctrl+shift+space
+    mouse_left_click = doaction, closecurrent
+    mouse_middle_click = close__all
+    mouse_right_click = closecurrent
+#+end_src
+**** Colors
+#+begin_src bash
+[urgency_low]
+    frame_color = "#331177"
+    background = "#663399"
+    foreground = "#FFFFFF"
+    timeout = 20
+[urgency_normal]
+    frame_color = "#331177"
+    background = "#663399"
+    foreground = "#FFFFFF"
+    timeout = 20
+[urgency_critical]
+    frame_color = "#220044"
+    background = "#442288"
+    foreground = "#FFFFFF"
+    timeout = 40
+#+end_src
+*** Picom
+Picom, the Ibhagwan fork for the rounded corners.
+Using a Main configuration with all the beuty, then a mininum just for less intensive screen tearing prevention.
+Will use desktop keybinds to copy either the mininum or main to picoms' config file and restart the program.
+**** Main
+:PROPERTIES:
+:header-args: :tangle ~/.config/picom.main.conf
+:END:
+***** Appearance
+#+begin_src bash
+### Appearence
+# Corners
+corner-radius = 15.0;
+round-borders = 1;
+# Opacity
+inactive-opacity = 1;
+active-opacity = 1;
+frame-opacity = 1;
+inactive-opacity-override = false;
+# Blur
+blur-background = true;
+blur-background-frame = true;
+blur-background-fixed = true;
+blur-method = "dual_kawase";
+blur-strength = 3.5;
+#+end_src
+***** Settings
+#+begin_src bash
+### Backend
+backend = "glx";
+glx-no-stencil = true;
+glx-copy-from-front = false;
+refresh-rate = 60;
+vsync = true;
+# Log level
+log-level = "warn";
+# Enable experimental features
+experimental-backends = true;
+# Hide windows below blured
+transparent-clipping = true;
+# Use X Sync fence to sync clients' draw calls
+xrender-sync-fence = true;
+
+### Window Rules
+# Window type settings
+wintypes:
+{
+  tooltip = { fade = true; shadow = true; opacity = 0.9; focus = true;};
+  dock = { shadow = false; }
+  dnd = { shadow = false; }
+  popup_menu = { opacity = 0.9; }
+  dropdown_menu = { opacity = 0.9; }
+};
+# Prevents windows from being blured
+blur-background-exclude = [
+    "window_type = 'dock'",
+    "window_type = 'desktop'",
+    "_GTK_FRAME_EXTENTS@:c"
+];
+# Enable DBE painting mode for VSync to hopefully eliminate tearing.
+dbe = true;
+#+end_src
+**** Mininum
+:PROPERTIES:
+:header-args: :tangle ~/.config/picom.min.conf
+:END:
+#+begin_src bash
+### Backend
+backend = "glx";
+glx-no-stencil = true;
+glx-copy-from-front = false;
+# Log level
+log-level = "warn";
+# Specify refresh rate of the screen.
+refresh-rate = 60;
+# Enable DBE painting mode intended for VSync to (hopefully) eliminate tearing.
+dbe = true;
+# Vertical synchronization: match the refresh rate of the monitor
+vsync = true;
+# Hide windows below blured
+transparent-clipping = true;
+xrender-sync-fence = true;
+
+wintypes:
+{
+  tooltip = { fade = false; shadow = false; opacity = 1.0; focus = true;};
+  dock = { shadow = false; }
+  dnd = { shadow = false; }
+  popup_menu = { opacity = 1.0; }
+  dropdown_menu = { opacity = 1.0; }
+}
+#+end_src

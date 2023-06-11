@@ -149,8 +149,6 @@ Create a function for the modeline taking two lists of strings and ajust each to
               tab-always-indent nil)
 #+end_src
 **** 80 line column indicator
-kjkl j lkj l kjl kj k ij iji j ij  io j oi j oij o ij oij o ij ioj  oijkk  kj kj
-kj kj 
 #+begin_src emacs-lisp :results silent
 (setq fill-column 80)
 (setq-default fill-column 80)
@@ -260,6 +258,7 @@ kj kj
 #+end_src
 *** Hooks
 #+begin_src emacs-lisp
+
 #+end_src
 *** Keybinds
 #+begin_src emacs-lisp :results silent
@@ -493,6 +492,146 @@ screen -t cmus  3 nice cmus
 screen -t emacs 8 nice emacs
 screen -t bash  1 nice bash
 #+end_src
+** Media
+*** Mpd
+:PROPERTIES:
+:header-args: :tangle ~/.config/mpd/mpd.conf
+:END:
+#+begin_src bash
+music_directory    "~/Media/mus"
+db_file            "~/.config/mpd/database"
+playlist_directory "~/.config/mpd/playlists"
+pid_file           "~/.config/mpd/pid"
+state_file         "~/.config/mpd/state"
+sticker_file       "~/.config/mpd/sticker.sql"
+log_file           "syslog"
+auto_update        "yes"
+
+audio_output {  
+
+    type  "pulse"  
+    name  "pulse audio"
+    mixer_type      "hardware" 
+}  
+
+audio_output {
+    type                    "fifo"
+    name                    "my_fifo"
+    path                    "/tmp/mpd.fifo"
+    format                  "44100:16:2"
+}
+#+end_src
+*** Ncmpcpp
+:PROPERTIES:
+:header-args: :tangle ~/.ncmpcpp/config
+:END:
+**** Mpd 
+#+begin_src bash
+mpd_music_dir = "~/Media/mus"  
+mpd_host = "localhost"
+mpd_port = "6600"  
+mpd_connection_timeout = "5"  
+mpd_crossfade_time = "3"  
+
+database {
+    plugin "proxy"
+    host "localhost"
+    port "6600"
+}
+#+end_src
+**** Setings
+#+begin_src bash
+startup_screen = playlist_editor
+mouse_support = yes
+
+default_place_to_search_in = "database"
+
+incremental_seeking = "yes"
+seek_time = "1"
+
+cyclic_scrolling = "yes"
+header_text_scrolling = "yes"
+lines_scrolled = "2"
+
+enable_window_title = yes
+jump_to_now_playing_song_at_start = "yes"
+empty_tag_marker = ""
+
+system_encoding = "utf-8"
+regular_expressions = "extended"
+ignore_leading_the = "yes"  
+#+end_src 
+**** Playlists
+#+begin_src bash
+playlist_disable_highlight_delay = "0"  
+playlist_display_mode = "columns"  
+playlist_show_remaining_time = "yes"
+playlist_shorten_total_times = no
+playlist_separate_albums = "yes"
+#+end_src
+**** Colors
+#+begin_src bash
+colors_enabled = yes
+discard_colors_if_item_is_selected = "no"
+
+color1 = white
+color2 = magenta
+
+header_window_color = magenta
+main_window_color = magenta
+window_border_color = magenta
+active_window_border = magenta
+
+state_line_color = magenta
+state_flags_color = magenta:b
+
+
+progressbar_color = magenta:b
+progressbar_elapsed_color = magenta:b
+
+statusbar_time_color = magenta:b
+
+player_state_color = magenta:b
+alternative_ui_separator_color = magenta:b
+
+volume_color = magenta
+statusbar_color = magenta
+
+empty_tag_color = white
+#+end_src
+**** Appearence
+#+begin_src bash
+header_visibility = "yes"
+statusbar_visibility = "yes"
+titles_visibility = "yes"
+display_bitrate = "yes"
+
+user_interface = "alternative"
+autocenter_mode = "yes"  
+browser_display_mode = "columns"  
+playlist_editor_display_mode = "columns"
+
+selected_item_prefix = "* "
+current_item_prefix = "$(magenta)$r 󰒊 "
+current_item_inactive_column_prefix = "$(magenta)"
+current_item_inactive_column_suffix = "$(magenta)"
+
+progressbar_look =  "󰻂"
+
+now_playing_prefix = "$b 󱖑 "
+
+visualizer_type = wave
+visualizer_look = ●▮
+visualizer_color = 165, 93, 199, 55, 97, 135, 99, 54, 57
+#+end_src
+**** Formatting
+#+begin_src bash
+alternative_header_first_line_format = "$6$aqqu$/a$8 {%t}|{%f} $6$atqq$/a$6"
+alternative_header_second_line_format = "{{$8%b$8}{ [$8%y$8]}}|{%D}"
+song_list_format = "{$3%n │ $9}{$7%a - $9}{$5%t$9}|{$8%f$9}$R{$6 │ %b$9}{$3 │ %l$9}"
+song_window_title_format = "{%a - }{%t}|{%f}"
+song_columns_list_format = "(10)[magenta]{l} (30)[white]{a} (30)[magenta]{b} (50)[white]{t}"  
+#+end_src 
 ** Desktop
 *** Xmonad
 :PROPERTIES:
@@ -637,30 +776,42 @@ Config {
  template = "  %XMonadLog% }{ %cpu%  %memory%   %enp2s0% %wlp3s0%    %volumelevel%   %date%  ",
   Run Date "  %d-%m-%y <fc=#8be9fd>  %H:%M:%S</fc>" "date" 10,
 *** Dmenu
+:PROPERTIES:
+:header-args: :tangle ~/Documents/prog/suckless/dmenu/config.h
+:END:
+
+- Patches
+1. dmenu-alpha-20230110-5.2
+2. dmenu-border-5.2
+3. dmenu-center-5.2
+4. dmenu-mousesupport-5.2
+
+Tanlge property assumes build dir is in "~/Documents/prog/suckless/dmenu/".
+Building in dmenu 5.2
+
 #+begin_src c
-static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
-static int topbar = 1;
-static int centered = 1;
-static unsigned int lines      = 15;
-static int min_width = 400;
+static int topbar                  = 1;
+static int centered                = 1;
+static unsigned int border_width   = 5;
+static unsigned int lines          = 15;
+static int min_width               = 400;
+
+static const char *prompt          = NULL;
 static const char worddelimiters[] = " ";
-static unsigned int border_width = 5;
-static const char *fonts[] = {
-	"Consolataa:size=10"
-};
+
+static const char *fonts[]         = { "Consolataa:size=10" };
 
 static const char *colors[SchemeLast][2] = {
-	[SchemeNorm] = { "#ffffff", "#333333" },
+	[SchemeNorm] = { "#ffffff", "#584C5F" },
 	[SchemeSel] =  { "#ffffff", "#663399" },
 	[SchemeOut] =  { "#880000", "#0000ff" },
 };
 
-static const unsigned int alpha = 0xb4;
+static const unsigned int alpha    = 0xb4;
 static const unsigned int alphas[SchemeLast][2] = {
 	[SchemeNorm] = { OPAQUE, alpha },
 	[SchemeSel] = { OPAQUE, alpha },
 	[SchemeOut] = { OPAQUE, alpha },
-
 };
 #+end_src
 *** tdm
